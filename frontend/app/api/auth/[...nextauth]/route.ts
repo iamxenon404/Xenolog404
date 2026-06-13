@@ -8,11 +8,11 @@ const handler = NextAuth({
       clientSecret: process.env.GITHUB_SECRET!,
     }),
   ],
-  callbacks: {
+callbacks: {
     async jwt({ token, profile }) {
-      // If it's the first time logging in, attach the raw GitHub ID to the token
+      // If it's the first time logging in, cast profile as 'any' to read the GitHub ID safely
       if (profile) {
-        token.githubId = profile.id;
+        token.githubId = (profile as any).id;
       }
       return token;
     },
