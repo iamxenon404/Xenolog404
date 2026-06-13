@@ -1,87 +1,36 @@
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Frontend README (Next.js)
+## Getting Started
 
-```markdown
-# Webhook Tester Frontend
-
-This is the **Next.js frontend** for the Webhook Tester project. It provides a dashboard to create webhooks and view captured logs in a clean UI.
-
-## Features
-
-- Create new webhook endpoints
-- View logs for each webhook in real-time
-- Navigate between webhooks
-
-## Requirements
-
-- Node.js v16+
-- npm
-
-## Setup
-
-1. Navigate to frontend folder:
-```bash
-cd webhook-tester/frontend
-````
-
-2. Install dependencies:
-
-```bash
-npm install
-```
-
-## Running the Frontend
+First, run the development server:
 
 ```bash
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-Frontend will run on **[http://localhost:3000](http://localhost:3000)** by default.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Usage
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-* Open the dashboard at `http://localhost:3000`
-* Click **Create Webhook** to get a new URL
-* Send requests to the URL using Postman or other tools
-* Navigate to `/logs/[id]` to view the logs
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## License
+## Learn More
 
-MIT License
+To learn more about Next.js, take a look at the following resources:
 
-```
-```
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-Project Structure
+## Deploy on Vercel
 
-```
-webhook-tester/
-│
-├── backend/                  # Express backend
-│   ├── src/
-│   │   ├── app.js            # Core Express setup
-│   │   ├── routes/
-│   │   │   ├── create.js
-│   │   │   ├── hook.js
-│   │   │   └── logs.js
-│   │   ├── utils/
-│   │   │   ├── idGen.js
-│   │   │   └── storage.js
-│   │   └── middleware/
-│   │       └── bodyParser.js
-│   ├── storage/              # Optional file-based storage
-│   │   └── data.json
-│   └── server.js             # Entry point
-│
-├── frontend/                 # Next.js frontend
-│   ├── pages/
-│   │   ├── index.js          # Dashboard home
-│   │   ├── logs/[id].js      # Logs view page
-│   │   └── api/              # Next.js API routes if needed
-│   ├── components/           # Reusable UI components
-│   ├── public/
-│   └── styles/
-│
-├── package.json              # Optionally root-level scripts
-└── README.md 
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
