@@ -1,8 +1,5 @@
-"use client";
+import Dashboard from "./component/Dashboard";
 
-import { SessionProvider } from "next-auth/react";
-import React from "react";
-
-export function Providers({ children }: { children: React.ReactNode }) {
-  return <SessionProvider>{children}</SessionProvider>;
+export default function Home() {
+  return <Dashboard />;
 }
