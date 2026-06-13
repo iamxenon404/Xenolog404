@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Providers } from "./providers"; // Import your custom wrapper
+import { Providers } from "./providers"; 
+// @ts-ignore
 import "./globals.css";
 
 export const metadata: Metadata = {
