@@ -1,7 +1,8 @@
 'use client';
 
-import { ArrowRight, Github } from 'lucide-react';
-import { useSession, signIn } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { ArrowRight, Github, Terminal, Activity, ShieldAlert, Cpu } from 'lucide-react';
+import { signIn, useSession } from 'next-auth/react';
 
 interface HeroProps {
   onEnterGuest: () => void;
@@ -9,99 +10,138 @@ interface HeroProps {
 
 export default function Hero({ onEnterGuest }: HeroProps) {
   const { data: session } = useSession();
+  const [mountedTime, setMountedTime] = useState<string>('');
+
+  useEffect(() => {
+    setMountedTime(new Date().toLocaleTimeString());
+  }, []);
 
   return (
-    <section className="flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-12 pb-20 max-w-[750px] mx-auto relative z-10">
+    <section className="flex flex-col lg:flex-row items-center justify-between gap-12 px-4 sm:px-6 pt-16 pb-24 max-w-[850px] mx-auto relative z-10 text-left">
       
-      {/* MONOCHROME SYSTEM BADGE */}
-      <div className="mb-6 px-3 py-1 rounded-md border border-zinc-800 bg-zinc-950 text-[9px] font-mono tracking-[0.25em] uppercase text-zinc-400">
-        SYS_STATUS // LATENCY_SUB_MS
-      </div>
+      {/* LEFT SIDE: PREMIUM TYPOGRAPHY & CTA */}
+      <div className="flex-1 flex flex-col items-start max-w-md">
+        {/* INTERACTIVE GLOW BADGE */}
+        <div className="mb-6 flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-[10px] font-mono tracking-wider text-indigo-300 shadow-[0_0_15px_rgba(99,102,241,0.15)]">
+          <Activity className="w-3 h-3 text-indigo-400 animate-pulse" />
+          <span>SYS_STATUS // EDGE_STREAM_READY</span>
+        </div>
 
-      {/* HEADLINE */}
-      <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tighter uppercase leading-[0.95] mb-6 bg-gradient-to-b from-white to-zinc-600 bg-clip-text text-transparent">
-        Catch Webhooks.<br />Zero Bloat.
-      </h1>
+        {/* HIGH-CONTRAST GRADIENT HEADLINE */}
+        <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tighter uppercase leading-[0.95] mb-5">
+          Catch Webhooks.
+          <span className="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-500 font-extrabold drop-shadow-[0_2px_10px_rgba(99,102,241,0.2)]">
+            Zero Latency.
+          </span>
+        </h1>
 
-      {/* SUBTITLE */}
-      <p className="text-zinc-500 dark:text-zinc-400 text-xs sm:text-sm font-medium leading-relaxed mb-10 max-w-md">
-        An elite, privacy-first webhook inspector. Inspect raw HTTP incoming payloads over the live internet with no trackers, no background telemetry, and no database hoarding.
-      </p>
+        {/* SUBTITLE */}
+        <p className="text-zinc-400 text-xs sm:text-sm font-medium leading-relaxed mb-8">
+          An elite, privacy-first webhook inspector. Stream raw HTTP incoming payloads over the live internet with no cookies, zero third-party tracking, and automatic 24-hour memory purges.
+        </p>
 
-      {/* ACTION BUTTONS */}
-      <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs sm:max-w-sm justify-center mb-16 relative z-20">
-        <button
-          onClick={onEnterGuest}
-          className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-[10px] font-black uppercase tracking-widest transition-all border border-zinc-800 hover:border-zinc-700 active:scale-[0.98]"
-        >
-          Open Guest HUD
-          <ArrowRight className="w-3.5 h-3.5 text-zinc-400" />
-        </button>
-
-        {!session ? (
+        {/* INTERACTION HUB */}
+        <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs justify-start relative z-20">
           <button
-            onClick={() => signIn('github')}
-            className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white text-black text-[10px] font-black uppercase tracking-widest transition-all hover:bg-zinc-100 active:scale-[0.98]"
+            onClick={onEnterGuest}
+            className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white text-[10px] font-black uppercase tracking-widest transition-all shadow-[0_4px_20px_rgba(99,102,241,0.25)] active:scale-[0.98] border border-indigo-400/20"
           >
-            <Github className="w-3.5 h-3.5" />
-            Sync GitHub
+            Open Guest HUD
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
-        ) : (
-          <div className="flex items-center justify-center px-6 py-3.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-400 text-[10px] font-mono uppercase tracking-widest select-none">
-            [ STATUS_CONNECTED ]
-          </div>
-        )}
+
+          {!session ? (
+            <button
+              onClick={() => signIn('github')}
+              className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-[10px] font-black uppercase tracking-widest transition-all border border-zinc-800 hover:border-zinc-700 active:scale-[0.98]"
+            >
+              <Github className="w-3.5 h-3.5 text-zinc-400" />
+              Sync GitHub
+            </button>
+          ) : (
+            <div className="flex items-center justify-center px-5 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono uppercase tracking-widest select-none shadow-[0_0_10px_rgba(16,185,129,0.05)]">
+              ● LINK_ACTIVE
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* UPGRADED ULTRA-CLEAN LIVE LOG WINDOW */}
-      <div className="w-full rounded-lg border border-zinc-900 bg-[#050505] text-left font-mono text-[11px] text-zinc-500 overflow-hidden tracking-normal">
+      {/* RIGHT SIDE: HIGH-FIDELITY IDE CODE TERMINAL */}
+      <div className="w-full lg:w-[380px] shrink-0 rounded-xl border border-zinc-800/80 bg-zinc-950/70 backdrop-blur-xl text-left font-mono text-[11px] overflow-hidden tracking-normal shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative group hover:border-indigo-500/30 transition-all duration-300">
         
-        {/* Top Minimal Utility Bar */}
-        <div className="flex items-center justify-between px-4 py-2.5 bg-[#09090b] border-b border-zinc-900">
-          <div className="flex items-center gap-3">
-            <span className="text-[9px] font-bold text-zinc-500 tracking-[0.15em]">CONSOLE // INSTANT_FEED</span>
-            <div className="h-2 w-[1px] bg-zinc-800" />
-            <span className="text-[9px] text-zinc-600">ID: NODE_404_ALPHA</span>
+        {/* Hidden internal glow effect on hover */}
+        <div className="absolute -inset-px bg-gradient-to-r from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+        {/* Top Navigation Control Header */}
+        <div className="flex items-center justify-between px-4 py-3 bg-zinc-900/50 border-b border-zinc-800/80 relative z-10">
+          <div className="flex items-center gap-2">
+            <Terminal className="w-3.5 h-3.5 text-indigo-400" />
+            <span className="text-[9px] font-bold text-zinc-300 tracking-wider">XEN_CONSOLE // FEED</span>
           </div>
-          <div className="text-[9px] text-zinc-600 font-bold tracking-widest uppercase">
-            STREAMING_ACTIVE
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-rose-500/40" />
+            <span className="w-2 h-2 rounded-full bg-amber-500/40" />
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           </div>
         </div>
         
-        {/* Code Grid Layout */}
-        <div className="p-5 space-y-3 overflow-x-auto leading-relaxed whitespace-nowrap bg-gradient-to-b from-transparent to-zinc-950/10">
+        {/* Terminal Live Workspace Body */}
+        <div className="p-4 space-y-4 overflow-x-auto leading-relaxed relative z-10">
           
-          {/* Log Entry 1 */}
-          <div className="flex items-start gap-4">
-            <span className="text-zinc-700 select-none text-[10px]">01</span>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-zinc-900 text-zinc-300 border border-zinc-800">POST</span>
-              <span className="text-zinc-300 font-medium">/api/v1/incoming</span>
-              <span className="text-zinc-600">→ status:</span>
-              <span className="text-zinc-400">200_ok</span>
-              <span className="text-zinc-700 font-light">[{new Date().toLocaleTimeString()}]</span>
+          {/* Request Header Block */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-[10px] text-zinc-500 border-b border-zinc-900 pb-1">
+              <span>METRIC</span>
+              <span>VALUE</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-zinc-500">Method:</span>
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">POST</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-zinc-500">Endpoint:</span>
+              <span className="text-zinc-300 font-medium">/api/v1/node_404</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-zinc-500">Latency:</span>
+              <span className="text-indigo-400 font-bold">0.42 ms</span>
             </div>
           </div>
 
-          {/* Log Entry 2 (JSON Detail Breakout) */}
-          <div className="flex items-start gap-4 border-t border-zinc-900/60 pt-3">
-            <span className="text-zinc-700 select-none text-[10px]">02</span>
-            <div className="space-y-1 w-full text-zinc-400">
-              <div><span className="text-zinc-600">Headers:</span> <span className="text-zinc-500">{"{ 'content-type': 'application/json' }"}</span></div>
-              <div className="text-zinc-600">Payload:</div>
-              <div className="pl-4 text-zinc-500 bg-zinc-950/50 p-2.5 rounded border border-zinc-900 max-w-fit font-medium">
-                <div>{"{"}</div>
-                <div className="pl-4"><span className="text-zinc-400">"event"</span>: <span className="text-zinc-300">"checkout.session.completed"</span>,</div>
-                <div className="pl-4"><span className="text-zinc-400">"livemode"</span>: <span className="text-zinc-300">true</span>,</div>
-                <div className="pl-4"><span className="text-zinc-400">"currency"</span>: <span className="text-zinc-300">"usd"</span></div>
-                <div>{"}"}</div>
+          {/* Raw JSON Payload Block */}
+          <div className="space-y-1.5 pt-2 border-t border-zinc-900">
+            <div className="flex items-center justify-between text-[10px] text-zinc-500">
+              <span>INCOMING_PAYLOAD</span>
+              <span className="text-zinc-600 text-[9px]">{mountedTime || '--:--:--'}</span>
+            </div>
+            
+            <div className="text-zinc-400 bg-black/40 p-3 rounded-lg border border-zinc-900 font-medium font-mono text-[10.5px]">
+              <div>{"{"}</div>
+              <div className="pl-4"><span className="text-indigo-400">"event"</span>: <span className="text-amber-300">"stripe.charge.succeeded"</span>,</div>
+              <div className="pl-4"><span className="text-indigo-400">"livemode"</span>: <span className="text-emerald-400">true</span>,</div>
+              <div className="pl-4">
+                <span className="text-indigo-400">"data"</span>: {"{"}
+                <span className="text-zinc-500 font-light"> "amount": 4900, "currency": "usd" </span>
+                {"}"}
               </div>
+              <div>{"}"}</div>
+            </div>
+          </div>
+
+          {/* Connection Footer Meta */}
+          <div className="flex items-center gap-4 text-[9px] text-zinc-600 pt-1">
+            <div className="flex items-center gap-1">
+              <Cpu className="w-3 h-3 text-zinc-600" />
+              <span>TLS_1.3</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <ShieldAlert className="w-3 h-3 text-zinc-600" />
+              <span>IP_MASKED</span>
             </div>
           </div>
 
         </div>
       </div>
-
     </section>
   );
 }
