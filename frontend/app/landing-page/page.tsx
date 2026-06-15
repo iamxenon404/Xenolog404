@@ -1,28 +1,30 @@
 'use client';
 
 import Header from './components/Header';
+import Hero from './components/Hero';
+import Features from './components/Features';
 import Footer from './components/Footer';
 
 export default function LandingPage() {
-  return (
-    <div className="min-h-screen bg-[#000000] text-zinc-400 font-sans flex flex-col justify-between">
-      
-      {/* TOP HEADER */}
-      <Header />
+  const handleGuestEntry = () => {
+    // Drop back into the core operational workspace router
+    window.location.href = '/';
+  };
 
-      {/* MAIN HERO CONTENT PLACEHOLDER */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
-        <h1 className="text-4xl font-black text-white uppercase tracking-tighter">
-          Workspace Pending
-        </h1>
-        <p className="text-zinc-600 text-xs mt-2 font-mono">
-          Ready to inject hero sections.
-        </p>
+  return (
+    <div className="min-h-screen bg-[#000000] text-zinc-400 font-sans flex flex-col justify-between relative overflow-hidden">
+      {/* SOFT GLOW DESIGN LAYER */}
+      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none" />
+
+      {/* COMPONENT LAYOUT SHELL */}
+      <Header />
+      
+      <main className="flex-1 flex flex-col justify-center">
+        <Hero onEnterGuest={handleGuestEntry} />
+        <Features />
       </main>
 
-      {/* BOTTOM FOOTER */}
       <Footer />
-      
     </div>
   );
 }
