@@ -34,22 +34,25 @@ export default function Header() {
         </span>
       </div>
 
-      {/* CENTER: LIVE STAR CHIP (Hidden on mobile/tablet, safely shows on desktops) */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block z-10">
-        <a
-          href={REPO_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-zinc-800 bg-zinc-950/40 hover:border-indigo-500/30 text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-white transition-all group white-space-nowrap"
-        >
-          <Star className="w-3 h-3 text-indigo-500 group-hover:text-amber-400 group-hover:rotate-12 transition-all" />
-          <span>Star on GitHub</span>
-          <span className="font-mono text-zinc-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">
-            {stars !== null ? stars : '0'}
-          </span>
-          <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-        </a>
-      </div>
+{/* CENTER: LIVE STAR CHIP (Responsive layout optimization) */}
+<div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+  <a
+    href={REPO_URL}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl border border-zinc-800 bg-zinc-950/40 hover:border-indigo-500/30 text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-white transition-all group"
+  >
+    <Star className="w-3 h-3 text-indigo-500 group-hover:text-amber-400 group-hover:rotate-12 transition-all" />
+    
+    {/* This text hides on mobile, shows on desktop */}
+    <span className="hidden sm:inline">Star on GitHub</span>
+    
+    <span className="font-mono text-zinc-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800 text-[9px] sm:text-[10px]">
+      {stars !== null ? stars : '0'}
+    </span>
+    <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block" />
+  </a>
+</div>
 
       {/* RIGHT: AUTH ACTIONS */}
       <div className="shrink-0">
