@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Webhook, AlertCircle, Loader2, Cpu, Globe, ArrowUpRight } from 'lucide-react';
+import { useSession, signIn, signOut } from 'next-auth/react';
+import { Plus, Webhook, AlertCircle, Loader2, Cpu, Globe, ArrowUpRight, Github, LogOut, ShieldAlert } from 'lucide-react';
 import EndpointCard from './EndpointCard';
 
 interface Endpoint {
@@ -12,6 +13,7 @@ interface Endpoint {
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
 
 export default function Dashboard() {
+  const { data: session, status } = useSession();
   const [endpoints, setEndpoints] = useState<Endpoint[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,6 +45,7 @@ export default function Dashboard() {
 
       <div className="relative z-10 max-w-[700px] mx-auto px-6 py-12">
         
+        {/* PREMIUM NAV BAR WITH AUTH MANAGEMENT */}
         <nav className="flex items-center justify-between mb-20">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-zinc-900 dark:bg-white shadow-2xl transition-transform hover:rotate-12">
@@ -52,12 +55,52 @@ export default function Dashboard() {
               XenLog<span className="text-indigo-600 dark:text-indigo-500">404</span>
             </span>
           </div>
-          <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-            System_Online
+
+          <div className="flex items-center gap-3">
+            {status === "loading" ? (
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-500/10 border border-zinc-500/20 text-[10px] font-black uppercase tracking-wider">
+                <Loader2 className="w-3 h-3 animate-spin text-zinc-500" />
+              </div>
+            ) : session ? (
+              /* SECURE USER METADATA HUD */
+              <div className="flex items-center gap-3 bg-zinc-200/60 dark:bg-zinc-900/40 border border-zinc-300/50 dark:border-white/5 pl-2 pr-3 py-1 rounded-full text-[10px] font-black tracking-wider shadow-sm transition-all hover:border-zinc-400 dark:hover:border-white/10 group/user">
+                <img 
+                  src={session.user?.image || ""} 
+                  alt="GitHub Avatar" 
+                  className="w-6 h-6 rounded-full border border-zinc-300 dark:border-white/20 shadow-sm"
+                />
+                <div className="flex flex-col text-left">
+                  <span className="text-zinc-900 dark:text-white uppercase tracking-tight text-[9px] truncate max-w-[80px]">{session.user?.name}</span>
+                  <span className="text-[8px] font-mono font-bold text-indigo-500 tracking-normal">UID: {(session.user as any).githubId || 'PRO'}</span>
+                </div>
+                <button 
+                  onClick={() => signOut()}
+                  title="Disconnect Node"
+                  className="ml-1 p-1 rounded-full text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 dark:hover:bg-rose-500/20 transition-all active:scale-95"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              /* OAUTH HANDSHAKE CONNECT BUTTON */
+              <button
+                onClick={() => signIn('github')}
+                className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-950 dark:bg-white border border-zinc-800 dark:border-zinc-200 text-[10px] font-black uppercase tracking-widest text-white dark:text-black hover:scale-[1.03] active:scale-[0.97] transition-all shadow-md group/btn"
+              >
+                <Github className="w-3.5 h-3.5 group-hover/btn:rotate-12 transition-transform" />
+                Connect Node
+              </button>
+            )}
+
+            {/* STATUS MONITOR CHIP */}
+            <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+              System_Online
+            </div>
           </div>
         </nav>
 
+        {/* WORKSPACE HEADLINE */}
         <header className="flex flex-col items-center mb-16 text-center">
           <h1 className="text-7xl font-black tracking-tighter text-zinc-900 dark:text-white mb-6 bg-gradient-to-b from-zinc-900 to-zinc-600 dark:from-white dark:to-zinc-500 bg-clip-text text-transparent">
             Inspector
@@ -67,11 +110,23 @@ export default function Dashboard() {
           </p>
         </header>
 
+        {/* PRIMARY FUNCTIONAL HUD CARD */}
         <div className="relative group">
           <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[32px] blur opacity-10 group-hover:opacity-20 transition duration-1000"></div>
           <div className="relative bg-zinc-200/50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-white/10 rounded-[32px] p-2 backdrop-blur-3xl shadow-2xl">
             <div className="bg-white dark:bg-[#050505] rounded-[26px] p-8 border border-zinc-100 dark:border-white/5">
               <section className="space-y-10">
+                
+                {/* ACCOUNT PERSISTENCE ALERT FLAG */}
+                {!session && status !== "loading" && (
+                  <div className="flex items-center justify-between gap-4 bg-amber-500/5 border border-amber-500/10 p-3.5 rounded-xl text-amber-600 dark:text-amber-400 text-[9px] font-bold uppercase tracking-widest leading-normal">
+                    <div className="flex items-center gap-2.5">
+                      <ShieldAlert className="w-4 h-4 shrink-0 opacity-80" />
+                      <span>Guest Mode active. Endpoints auto-purge after 24 hours of total inactivity.</span>
+                    </div>
+                  </div>
+                )}
+
                 <button
                   onClick={handleCreate}
                   disabled={loading}
@@ -80,7 +135,9 @@ export default function Dashboard() {
                   <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 dark:via-black/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                   <div className="flex items-center gap-3 relative z-10">
                     {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Plus className="w-5 h-5" />}
-                    <span className="tracking-widest uppercase text-xs font-black">{loading ? 'Spawning Node...' : 'Deploy New Endpoint'}</span>
+                    <span className="tracking-widest uppercase text-xs font-black">
+                      {loading ? 'Spawning Node...' : session ? 'Deploy Permanent Link' : 'Deploy Temporary Link'}
+                    </span>
                   </div>
                   <ArrowUpRight className="w-5 h-5 opacity-50 group-hover:opacity-100 transition-opacity relative z-10" />
                 </button>
@@ -92,6 +149,7 @@ export default function Dashboard() {
                   </div>
                 )}
 
+                {/* ACTIVE LINKS WRAPPER */}
                 <div className="space-y-6">
                   <div className="flex items-center justify-between px-1">
                     <h2 className="text-[10px] font-black text-zinc-400 dark:text-zinc-700 uppercase tracking-[0.4em]">Active_Network_Nodes</h2>
@@ -120,6 +178,7 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* BOTTOM METRICS */}
         <footer className="mt-16 grid grid-cols-2 gap-4">
           {[
             { label: 'Throughput', value: '24ms / Global', icon: Cpu, color: 'text-indigo-500' },
