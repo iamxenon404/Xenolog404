@@ -8,8 +8,8 @@ export default function Header() {
   const { data: session } = useSession();
   const [stars, setStars] = useState<number | null>(null);
 
-  const REPO_URL = "https://github.com/iamxenon404/xenlog404";
-  const API_URL = "https://api.github.com/repos/iamxenon404/xenlog404";
+  const REPO_URL = "https://github.com/iamxenon404/Xenolog404";
+  const API_URL = "https://api.github.com/repos/iamxenon404/Xenolog404";
 
   useEffect(() => {
     fetch(API_URL)
