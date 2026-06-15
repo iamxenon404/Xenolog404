@@ -23,9 +23,9 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="w-full max-w-[750px] mx-auto px-6 py-6 flex items-center justify-between border-b border-zinc-900 relative">
+    <header className="w-full max-w-[750px] mx-auto px-4 sm:px-6 py-6 flex items-center justify-between border-b border-zinc-900 relative">
       {/* LEFT: LOGO */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 shrink-0">
         <div className="p-2 rounded-xl bg-white text-black">
           <Webhook className="w-4 h-4" />
         </div>
@@ -34,13 +34,13 @@ export default function Header() {
         </span>
       </div>
 
-      {/* CENTER: LIVE STAR CHIP */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden sm:block">
+      {/* CENTER: LIVE STAR CHIP (Hidden on mobile/tablet, safely shows on desktops) */}
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block z-10">
         <a
           href={REPO_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-zinc-800 bg-zinc-950/40 hover:border-indigo-500/30 text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-white transition-all group"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-zinc-800 bg-zinc-950/40 hover:border-indigo-500/30 text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-white transition-all group white-space-nowrap"
         >
           <Star className="w-3 h-3 text-indigo-500 group-hover:text-amber-400 group-hover:rotate-12 transition-all" />
           <span>Star on GitHub</span>
@@ -52,10 +52,12 @@ export default function Header() {
       </div>
 
       {/* RIGHT: AUTH ACTIONS */}
-      <div>
+      <div className="shrink-0">
         {session ? (
           <div className="flex items-center gap-3">
-            <span className="text-xs text-zinc-400 font-mono">{session.user?.name}</span>
+            <span className="text-xs text-zinc-400 font-mono truncate max-w-[100px] sm:max-w-none">
+              {session.user?.name}
+            </span>
             <button 
               onClick={() => signOut()}
               className="p-2 rounded-lg bg-zinc-900 text-zinc-400 hover:text-rose-500 transition-colors"
