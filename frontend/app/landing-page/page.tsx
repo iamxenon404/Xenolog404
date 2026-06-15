@@ -12,8 +12,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#000000] text-zinc-400 font-sans flex flex-col justify-between relative overflow-hidden">
-      {/* SOFT GLOW DESIGN LAYER */}
+   <div className="min-h-screen bg-[#000000] text-zinc-400 font-sans flex flex-col justify-between relative overflow-hidden pt-24">      {/* SOFT GLOW DESIGN LAYER */}
       <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none" />
 
       {/* COMPONENT LAYOUT SHELL */}
