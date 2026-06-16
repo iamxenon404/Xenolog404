@@ -23,7 +23,7 @@ export default function Projects() {
           
           {/* GITHUB PORTAL */}
           <a 
-            href="https://github.com" 
+            href="https://github.com/iamxenon404/" 
             target="_blank" 
             rel="noopener noreferrer"
             className="group flex items-center justify-between p-4 rounded-xl border border-zinc-200 dark:border-zinc-900 bg-white dark:bg-zinc-950/40 hover:border-zinc-300 dark:hover:border-zinc-800 transition-all cursor-pointer shadow-sm dark:shadow-none"
@@ -42,7 +42,7 @@ export default function Projects() {
 
           {/* PORTFOLIO PORTAL */}
           <a 
-            href="#" 
+            href="https://xenon404.vercel.app" 
             className="group flex items-center justify-between p-4 rounded-xl border border-zinc-200 dark:border-zinc-900 bg-white dark:bg-zinc-950/40 hover:border-zinc-300 dark:hover:border-zinc-800 transition-all cursor-pointer shadow-sm dark:shadow-none"
           >
             <div className="flex items-center gap-3">
