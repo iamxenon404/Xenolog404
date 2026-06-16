@@ -9,7 +9,7 @@ export default function Projects() {
       {/* SECTION HEADER */}
       <div className="flex items-center gap-2 mb-12">
         <FolderGit2 className="w-4 h-4 text-zinc-500" />
-        <h2 className="text-[11px] font-black uppercase text-zinc-400 tracking-[0.3em]">Workspace_Nodes</h2>
+        <h2 className="text-[11px] font-black uppercase text-zinc-400 tracking-[0.3em]">XenLog_Nodes</h2>
       </div>
 
       {/* ASYMMETRIC LAYOUT SPLIT */}
@@ -58,29 +58,29 @@ export default function Projects() {
           </a>
         </div>
 
-        {/* RIGHT COLUMN: ACTION STACK WITh SCROLL INTENSITY (8 Columns) */}
+        {/* RIGHT COLUMN: ACTION STACK WITH SCROLL INTENSITY (8 Columns) */}
         <div className="md:col-span-8 space-y-8">
           
           {/* DEPLOYMENT PANEL SECTION */}
           <div className="p-8 rounded-2xl border border-zinc-900 bg-zinc-950/20 space-y-6 relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 font-mono text-[9px] text-zinc-800 tracking-widest hidden sm:block">
-              SYS_INIT_01
+              XEN_INGEST_01
             </div>
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-indigo-400">
                 <Terminal className="w-3.5 h-3.5" />
-                <span>Initialization Protocol</span>
+                <span>Interceptor Protocol</span>
               </div>
               <h3 className="text-lg font-black tracking-tight text-white uppercase">
-                Launch Workspace App Environment
+                Launch Live Webhook Dashboard
               </h3>
               <p className="text-[12px] text-zinc-400 leading-relaxed font-medium">
-                Ready to clean up the workspace clutter? Link your internal system parameters, open a dedicated staging pipeline, and view your synchronized logs right where they belong without manual browser interaction.
+                Ready to stop guessing what your third-party APIs are sending? Generate a unique, transient HTTP intercept URL instantly. Pipe in your inbound JSON payloads, stream headers over zero-latency web sockets, and inspect nested structures in real time.
               </p>
             </div>
             <button className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-[11px] font-mono font-black uppercase tracking-wider transition-all active:scale-[0.98]">
               <Play className="w-3.5 h-3.5 fill-current" />
-              Initialize Live Core
+              Initialize Ingestion Session
             </button>
           </div>
 
@@ -89,13 +89,13 @@ export default function Projects() {
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-amber-500">
                 <Cpu className="w-3.5 h-3.5" />
-                <span>Runtime Infrastructure Support</span>
+                <span>Server Compute Infrastructure Support</span>
               </div>
               <h3 className="text-lg font-black tracking-tight text-white uppercase">
-                Sustain the Platform Architecture
+                Sustain Webhook Pipeline Operations
               </h3>
               <p className="text-[12px] text-zinc-500 leading-relaxed font-medium">
-                This platform routes queries and assets with zero tracking cookies, data retention vaults, or promotional tracking layers. Contributions directly offset server runtime hosting, database pipelines, and continuous update loops.
+                XenLog processes continuous network packets with absolute privacy. We do not place target cookies, read your custom internal data structures, or drop tracker layers. Contributions directly cover persistent server proxy costs, streaming data pipelines, and maintenance loops.
               </p>
             </div>
             <a 
@@ -105,7 +105,7 @@ export default function Projects() {
               className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 rounded-xl bg-zinc-950 hover:bg-zinc-900 text-zinc-400 hover:text-white text-[11px] font-mono font-bold uppercase tracking-wider transition-all border border-zinc-800 hover:border-zinc-700 active:scale-[0.98]"
             >
               <Coffee className="w-3.5 h-3.5 text-amber-500" />
-              Buy Me A Coffee // Back Staging Costs
+              Buy Me A Coffee // Back Network Costs
             </a>
           </div>
 
