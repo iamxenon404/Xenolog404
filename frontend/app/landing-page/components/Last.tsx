@@ -6,35 +6,35 @@ export default function WorkFlowMatrix() {
   const pipelineSteps = [
     {
       id: "STAGE_01",
-      title: "Context Capture",
-      subtitle: "cli_hook // ide_runtime",
-      desc: "Your local environment pipes terminal output logs, compilation faults, or selected code structures directly into the execution payload.",
+      title: "Endpoint Generation",
+      subtitle: "v1.xenlog.dev // unique_hash",
+      desc: "Instantly provision an isolated, public HTTP endpoint path ready to accept incoming structural data payloads from any third-party service.",
       icon: Terminal,
-      meta: "STDIN >> LOCAL_BUFFER"
+      meta: "GET/POST >> GENERATED_URI"
     },
     {
       id: "STAGE_02",
-      title: "Secure Gateway Router",
-      subtitle: "tls_tunnel // transient_process",
-      desc: "Data streams through a TLS-encrypted transit path. The packet header is analyzed dynamically for workspace token assignment.",
+      title: "Packet Ingestion",
+      subtitle: "tls_handshake // raw_stream",
+      desc: "Our ingestion layer catches the incoming request data, immediately freezing the network headers, query strings, and request origins.",
       icon: Network,
-      meta: "AES_256_GCM >> ROUTE_NODE"
+      meta: "HTTP_200 >> CAPTURE_BUFFER"
     },
     {
       id: "STAGE_03",
-      title: "Model Execution Bridge",
-      subtitle: "inference_passthrough",
-      desc: "The sanitized context profile is dispatched directly to your designated model provider endpoint without local logging layers.",
+      title: "Payload Parsing Engine",
+      subtitle: "json_validation // structural_lint",
+      desc: "The incoming raw data stream is parsed securely. Complex payloads, form parameters, and binary segments are isolated and formatted.",
       icon: Cpu,
-      meta: "API_DISPATCH >> LLM_MATRIX"
+      meta: "RAW_DATA >> STRUCT_JSON"
     },
     {
       id: "STAGE_04",
-      title: "Workspace Matrix Sync",
-      subtitle: "ephemeral_ledger // reactive_ui",
-      desc: "The generation payload settles into a private SQLite database pool, immediately updating your synchronized browser and IDE webviews.",
+      title: "Reactive Dashboard Broadcast",
+      subtitle: "websocket_pipe // sub_second_push",
+      desc: "The sanitized webhook payload is instantly pushed over persistent socket tunnels, rendering the live data stream directly on your view log UI.",
       icon: Database,
-      meta: "DB_WRITE >> UI_REFRESH"
+      meta: "WS_EMIT >> DASHBOARD_RENDER"
     }
   ];
 
@@ -45,10 +45,10 @@ export default function WorkFlowMatrix() {
       <div className="flex flex-col space-y-2 mb-16">
         <div className="flex items-center gap-2">
           <Network className="w-4 h-4 text-zinc-500" />
-          <h2 className="text-[11px] font-black uppercase text-zinc-400 tracking-[0.3em]">Execution_Matrix</h2>
+          <h2 className="text-[11px] font-black uppercase text-zinc-400 tracking-[0.3em]">Ingestion_Matrix</h2>
         </div>
         <p className="text-[12px] text-zinc-500 font-medium max-w-md font-sans">
-          How data moves from your interactive engineering environment directly into your cloud-synced board.
+          How data moves from an external server directly into your interactive dashboard live view.
         </p>
       </div>
 
@@ -86,7 +86,7 @@ export default function WorkFlowMatrix() {
 
               </div>
 
-              {/* DOWNTREND ROUTER ARROW (Skip on last element) */}
+              {/* DOWNTREND ROUTER ARROW */}
               {index !== pipelineSteps.length - 1 && (
                 <div className="flex justify-start md:justify-center w-full md:max-w-[33%] pl-8 md:pl-0 my-1">
                   <div className="p-1 rounded-md border border-zinc-900 bg-zinc-950 text-zinc-700">

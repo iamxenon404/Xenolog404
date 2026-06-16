@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import Features from './components/Features';
 import Footer from './components/Footer';
 import Projects from './components/Projects';
+import WorkFlowMatrix from './components/Last';
 
 export default function LandingPage() {
   const handleGuestEntry = () => {
@@ -23,6 +24,7 @@ export default function LandingPage() {
         <Hero onEnterGuest={handleGuestEntry} />
         <Features />
         <Projects />
+        <WorkFlowMatrix />
       </main>
 
       <Footer />
