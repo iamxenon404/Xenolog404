@@ -5,18 +5,18 @@ import { Zap, Shield, RefreshCw } from 'lucide-react';
 export default function Features() {
   const items = [
     {
-      title: "Blazing Speed",
-      desc: "Optimized SQLite engine layer for instant sub-second log streams.",
+      title: "Sub-Second Ingestion",
+      desc: "Engineered with a lightweight SQLite storage layer to capture and display concurrent incoming webhook payloads without drop or delay.",
       icon: Zap
     },
     {
-      title: "Zero Tracking",
-      desc: "We don't drop target cookies, store emails, or hoard your custom payloads.",
+      title: "Zero Payload Tracking",
+      desc: "Absolute telemetry privacy. We do not drop identification cookies, store client metadata, or read inside your custom header parameters.",
       icon: Shield
     },
     {
-      title: "Auto-Purge",
-      desc: "Guest workspace channels automatically clear out after 24 hours of inactivity.",
+      title: "Ephemeral Data Purge",
+      desc: "Transient log routing. Your generated guest endpoint channels and inspected request histories automatically scrub clean after 24 hours.",
       icon: RefreshCw
     }
   ];
@@ -26,7 +26,7 @@ export default function Features() {
       {items.map((item, index) => {
         const Icon = item.icon;
         return (
-          <div key={index} className="flex flex-col items-center sm:items-start p-6 rounded-xl bg-zinc-950/30 border border-zinc-900 text-center sm:text-left min-h-[160px] justify-start">
+          <div key={index} className="flex flex-col items-center sm:items-start p-6 rounded-xl bg-zinc-950/30 border border-zinc-900 text-center sm:text-left min-h-[180px] justify-start">
             <div className="p-2.5 bg-zinc-900 border border-zinc-800 rounded-lg mb-4">
               <Icon className="w-4 h-4 text-indigo-500" />
             </div>
