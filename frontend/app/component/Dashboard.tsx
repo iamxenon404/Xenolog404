@@ -150,29 +150,34 @@ export default function Dashboard() {
                 )}
 
                 {/* ACTIVE LINKS WRAPPER */}
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between px-1">
-                    <h2 className="text-[10px] font-black text-zinc-400 dark:text-zinc-700 uppercase tracking-[0.4em]">Active_Network_Nodes</h2>
-                    <span className="text-[10px] bg-zinc-100 dark:bg-white/5 px-2 py-0.5 rounded border border-zinc-200 dark:border-white/10 text-zinc-500 font-mono">
-                      {endpoints.length} CHANNELS
-                    </span>
-                  </div>
+{/* ACTIVE LINKS WRAPPER */}
+<div className="space-y-6">
+  {/* FIXED LAYOUT WRAPPER: Stacks vertically on mobile, row-flows on small screens up */}
+  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
+    <h2 className="text-[10px] font-black text-zinc-400 dark:text-zinc-700 uppercase tracking-[0.4em]">
+      Active_Network_Nodes
+    </h2>
+    {/* self-start prevents the badge from stretching full width when stacked vertically */}
+    <span className="self-start sm:self-auto text-[10px] bg-zinc-100 dark:bg-white/5 px-2 py-0.5 rounded border border-zinc-200 dark:border-white/10 text-zinc-500 font-mono">
+      {endpoints.length} CHANNELS
+    </span>
+  </div>
 
-                  {endpoints.length > 0 ? (
-                    <div className="grid gap-4">
-                      {endpoints.map((ep) => (
-                        <EndpointCard key={ep.id} id={ep.id} url={ep.url} />
-                      ))}
-                    </div>
-                  ) : (
-                    !loading && (
-                      <div className="py-24 flex flex-col items-center justify-center border border-dashed border-zinc-200 dark:border-zinc-900 rounded-3xl bg-zinc-50/50 dark:bg-white/[0.01] group/empty">
-                        <Webhook className="w-10 h-10 text-zinc-300 dark:text-zinc-800 mb-4 group-hover/empty:scale-110 transition-transform" />
-                        <p className="text-[10px] font-black text-zinc-400 dark:text-zinc-800 uppercase tracking-[0.2em]">Awaiting Uplink Deployment</p>
-                      </div>
-                    )
-                  )}
-                </div>
+  {endpoints.length > 0 ? (
+    <div className="grid gap-4">
+      {endpoints.map((ep) => (
+        <EndpointCard key={ep.id} id={ep.id} url={ep.url} />
+      ))}
+    </div>
+  ) : (
+    !loading && (
+      <div className="py-24 flex flex-col items-center justify-center border border-dashed border-zinc-200 dark:border-zinc-900 rounded-3xl bg-zinc-50/50 dark:bg-white/[0.01] group/empty">
+        <Webhook className="w-10 h-10 text-zinc-300 dark:text-zinc-800 mb-4 group-hover/empty:scale-110 transition-transform" />
+        <p className="text-[10px] font-black text-zinc-400 dark:text-zinc-800 uppercase tracking-[0.2em]">Awaiting Uplink Deployment</p>
+      </div>
+    )
+  )}
+</div>
               </section>
             </div>
           </div>
