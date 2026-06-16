@@ -49,7 +49,7 @@ export default function Hero({ onEnterGuest }: HeroProps) {
               An elite, privacy-first webhook inspector. Stream raw HTTP incoming payloads over the live internet with no cookies, zero third-party tracking, and automatic 24-hour memory purges.
             </p>
 
-            {/* INTERACTION ACTION BUTTONS */}
+            {/* INTERACTION ACTION BUTTONS (FIXED - NO DUPLICATION) */}
             <div className="flex flex-col sm:flex-row gap-3 w-full justify-start relative z-20">
               <button
                 onClick={onEnterGuest}
@@ -58,25 +58,14 @@ export default function Hero({ onEnterGuest }: HeroProps) {
                 Open Guest HUD
                 <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
               </button>
-{/* INTERACTION ACTION BUTTONS */}
-<div className="flex flex-col sm:flex-row gap-3 w-full justify-start relative z-20">
-  <button
-    onClick={onEnterGuest}
-    className="flex items-center justify-center gap-2 px-5 py-3 rounded bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-[11px] font-mono font-black uppercase tracking-wider transition-all active:scale-[0.98] shadow-md"
-  >
-    Open Guest HUD
-    <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
-  </button>
 
-  {/* RE-ACTIVATED AUTH BUTTON WITH "COMING SOON" POPUP */}
-  <button
-    onClick={() => alert('GitHub Sync is coming soon!')}
-    className="flex items-center justify-center gap-2 px-5 py-3 rounded bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 text-[11px] font-mono font-black uppercase tracking-wider transition-all border border-zinc-300 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 active:scale-[0.98]"
-  >
-    <Github className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
-    Sync GitHub
-  </button>
-</div>
+              <button
+                onClick={() => alert('GitHub Sync is coming soon!')}
+                className="flex items-center justify-center gap-2 px-5 py-3 rounded bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 text-[11px] font-mono font-black uppercase tracking-wider transition-all border border-zinc-300 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 active:scale-[0.98]"
+              >
+                <Github className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
+                Sync GitHub
+              </button>
             </div>
           </div>
         </div>
