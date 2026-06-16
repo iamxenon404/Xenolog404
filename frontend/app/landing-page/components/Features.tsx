@@ -22,18 +22,23 @@ export default function Features() {
   ];
 
   return (
-    <section className="w-full max-w-[850px] mx-auto px-8 py-20 grid grid-cols-1 sm:grid-cols-3 gap-6 border-t border-zinc-900">
+    /* FIXED CONTAINERS & BORDERS: Adaptive borders matching the layout matrix */
+    <section className="w-full max-w-[850px] mx-auto px-8 py-20 grid grid-cols-1 sm:grid-cols-3 gap-6 border-t border-zinc-200 dark:border-zinc-900 transition-colors duration-700">
       {items.map((item, index) => {
         const Icon = item.icon;
         return (
-          <div key={index} className="flex flex-col items-center sm:items-start p-6 rounded-xl bg-zinc-950/30 border border-zinc-900 text-center sm:text-left min-h-[180px] justify-start">
-            <div className="p-2.5 bg-zinc-900 border border-zinc-800 rounded-lg mb-4">
-              <Icon className="w-4 h-4 text-indigo-500" />
+          /* BALANCED THEMED CARDS: Soft tint transitions on surfaces */
+          <div key={index} className="flex flex-col items-center sm:items-start p-6 rounded-xl bg-white dark:bg-zinc-950/30 border border-zinc-200 dark:border-zinc-900 text-center sm:text-left min-h-[180px] justify-start shadow-sm shadow-zinc-200/50 dark:shadow-none">
+            {/* ICON COMPONENT FRAME */}
+            <div className="p-2.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg mb-4">
+              <Icon className="w-4 h-4 text-indigo-600 dark:text-indigo-500" />
             </div>
-            <h3 className="text-[11px] font-black uppercase tracking-wider text-white mb-2">
+            {/* CARD TITLE */}
+            <h3 className="text-[11px] font-black uppercase tracking-wider text-zinc-900 dark:text-white mb-2 font-mono">
               {item.title}
             </h3>
-            <p className="text-[11px] text-zinc-500 leading-relaxed font-medium">
+            {/* CARD DESCRIPTION */}
+            <p className="text-[11px] text-zinc-500 dark:text-zinc-500 leading-relaxed font-medium">
               {item.desc}
             </p>
           </div>
