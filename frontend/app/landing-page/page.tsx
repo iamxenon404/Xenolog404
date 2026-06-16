@@ -7,14 +7,14 @@ import Footer from './components/Footer';
 import Projects from './components/Projects';
 import WorkFlowMatrix from './components/Last';
 
-export default function LandingPage() {
-  const handleGuestEntry = () => {
-    // Drop back into the core operational workspace router
-    window.location.href = '/';
-  };
+// 1. Define the TypeScript interface for the props
+interface LandingPageProps {
+  onEnterGuest: () => void;
+}
 
+// 2. Destructure the prop and apply the type definition
+export default function LandingPage({ onEnterGuest }: LandingPageProps) {
   return (
-    /* FIXED ROOT: Swaps seamlessly between zinc-100 and absolute black */
     <div className="min-h-screen bg-zinc-100 dark:bg-[#000000] text-zinc-600 dark:text-zinc-400 font-sans flex flex-col justify-between relative overflow-hidden pt-24 transition-colors duration-700">
       
       {/* SOFT GLOW DESIGN LAYER */}
@@ -24,7 +24,8 @@ export default function LandingPage() {
       <Header />
       
       <main className="flex-1 flex flex-col justify-center">
-        <Hero onEnterGuest={handleGuestEntry} />
+        {/* 3. Pass the prop down directly to the Hero component */}
+        <Hero onEnterGuest={onEnterGuest} />
         <Features />
         <Projects />
         <WorkFlowMatrix />
