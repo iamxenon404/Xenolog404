@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { signIn, useSession, signOut } from 'next-auth/react';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import { Webhook, Github, LogOut, Star, ArrowUpRight } from 'lucide-react';
 
 export default function Header() {
@@ -23,17 +23,17 @@ export default function Header() {
   }, []);
 
   return (
-    /* FIXED BAR CONTAINER WITH GLASSMORPHISM AND BOUNDARY STYLING */
-    <div className="fixed top-0 left-0 right-0 z-50 bg-[#000000]/70 backdrop-blur-md border-b border-zinc-900/80">
+    /* FIXED BAR CONTAINER WITH GLASSMORPHISM AND MATCHED DASHBOARD BACKGROUND PALETTE */
+    <div className="fixed top-0 left-0 right-0 z-50 bg-zinc-100/70 dark:bg-[#000000]/70 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-900/80 transition-colors duration-700">
       <header className="w-full max-w-[750px] mx-auto px-4 sm:px-6 py-5 flex items-center justify-between relative">
         
         {/* LEFT: LOGO */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="p-2 rounded-xl bg-white text-black">
+          <div className="p-2 rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-black shadow-sm">
             <Webhook className="w-4 h-4" />
           </div>
-          <span className="text-sm font-black tracking-tighter italic uppercase text-white">
-            XenLog<span className="text-indigo-500">404</span>
+          <span className="text-sm font-black tracking-tighter italic uppercase text-zinc-900 dark:text-white">
+            XenLog<span className="text-indigo-600 dark:text-indigo-500">404</span>
           </span>
         </div>
 
@@ -43,27 +43,27 @@ export default function Header() {
             href={REPO_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl border border-zinc-800 bg-zinc-950/40 hover:border-indigo-500/30 text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-white transition-all group"
+            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl border border-zinc-300 dark:border-zinc-800 bg-zinc-200/40 dark:bg-zinc-950/40 hover:border-indigo-500/30 text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-all group"
           >
             <Star className="w-3 h-3 text-indigo-500 group-hover:text-amber-400 group-hover:rotate-12 transition-all" />
             <span className="hidden sm:inline">Star on GitHub</span>
-            <span className="font-mono text-zinc-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800 text-[9px] sm:text-[10px]">
+            <span className="font-mono text-zinc-500 dark:text-zinc-400 bg-zinc-200 dark:bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-300 dark:border-zinc-800 text-[9px] sm:text-[10px]">
               {stars !== null ? stars : '0'}
             </span>
             <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block" />
           </a>
         </div>
 
-        {/* RIGHT: AUTH ACTIONS */}
+        {/* RIGHT: AUTH ACTIONS (COMMENTED OUT FOR EXCLUSIVE GUEST MODE) */}
         <div className="shrink-0">
-          {session ? (
+          {/* {session ? (
             <div className="flex items-center gap-3">
-              <span className="text-xs text-zinc-400 font-mono truncate max-w-[100px] sm:max-w-none">
+              <span className="text-xs text-zinc-600 dark:text-zinc-400 font-mono truncate max-w-[100px] sm:max-w-none">
                 {session.user?.name}
               </span>
               <button 
                 onClick={() => signOut()}
-                className="p-2 rounded-lg bg-zinc-900 text-zinc-400 hover:text-rose-500 transition-colors"
+                className="p-2 rounded-lg bg-zinc-200 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 hover:text-rose-500 transition-colors"
               >
                 <LogOut className="w-4 h-4" />
               </button>
@@ -71,12 +71,13 @@ export default function Header() {
           ) : (
             <button
               onClick={() => signIn('github')}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black text-xs font-black uppercase tracking-widest transition-all hover:bg-zinc-200 active:scale-[0.98]"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-black text-xs font-black uppercase tracking-widest transition-all hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98]"
             >
               <Github className="w-3.5 h-3.5" />
               Connect
             </button>
-          )}
+          )} 
+          */}
         </div>
       </header>
     </div>
