@@ -58,22 +58,25 @@ export default function Hero({ onEnterGuest }: HeroProps) {
                 Open Guest HUD
                 <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
               </button>
+{/* INTERACTION ACTION BUTTONS */}
+<div className="flex flex-col sm:flex-row gap-3 w-full justify-start relative z-20">
+  <button
+    onClick={onEnterGuest}
+    className="flex items-center justify-center gap-2 px-5 py-3 rounded bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-[11px] font-mono font-black uppercase tracking-wider transition-all active:scale-[0.98] shadow-md"
+  >
+    Open Guest HUD
+    <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
+  </button>
 
-              {/* AUTH ACTIONS COMPONENT (HIDDEN IN GUEST-ONLY OVERRIDES) */}
-              {/* {!session ? (
-                <button
-                  onClick={() => signIn('github')}
-                  className="flex items-center justify-center gap-2 px-5 py-3 rounded bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 text-[11px] font-mono font-black uppercase tracking-wider transition-all border border-zinc-300 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 active:scale-[0.98]"
-                >
-                  <Github className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
-                  Sync GitHub
-                </button>
-              ) : (
-                <div className="flex items-center justify-center px-5 py-3 rounded bg-emerald-500/5 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[11px] font-mono uppercase tracking-widest select-none">
-                  LINK_ACTIVE
-                </div>
-              )} 
-              */}
+  {/* RE-ACTIVATED AUTH BUTTON WITH "COMING SOON" POPUP */}
+  <button
+    onClick={() => alert('GitHub Sync is coming soon!')}
+    className="flex items-center justify-center gap-2 px-5 py-3 rounded bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 text-[11px] font-mono font-black uppercase tracking-wider transition-all border border-zinc-300 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 active:scale-[0.98]"
+  >
+    <Github className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
+    Sync GitHub
+  </button>
+</div>
             </div>
           </div>
         </div>
