@@ -1,117 +1,114 @@
 'use client';
 
-import { ArrowUpRight, FolderGit2, Github, Coffee, Play, User } from 'lucide-react';
+import { ArrowUpRight, FolderGit2, Github, Coffee, Play, User, Terminal, Cpu } from 'lucide-react';
 
 export default function Projects() {
   return (
-    <section className="w-full max-w-[850px] mx-auto px-8 py-24 border-t border-zinc-900/60 mt-12">
+    <section className="w-full max-w-[850px] mx-auto px-8 py-24 border-t border-zinc-900/60 mt-12 text-left">
       
       {/* SECTION HEADER */}
-      <div className="flex items-center gap-2 mb-8">
+      <div className="flex items-center gap-2 mb-12">
         <FolderGit2 className="w-4 h-4 text-zinc-500" />
-        <h2 className="text-[11px] font-black uppercase text-zinc-400 tracking-[0.3em]">Workspace_Hub</h2>
+        <h2 className="text-[11px] font-black uppercase text-zinc-400 tracking-[0.3em]">Workspace_Nodes</h2>
       </div>
 
-      {/* BENTO BOX GRID LAYOUT */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 auto-rows-[minmax(140px,_auto)]">
+      {/* ASYMMETRIC LAYOUT SPLIT */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
         
-        {/* CARD 1: GITHUB PORTAL (Large Feature Block - 7 Columns Wide) */}
-        <a 
-          href="https://github.com" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="group md:col-span-7 md:row-span-2 p-6 rounded-2xl border border-zinc-900 bg-zinc-950/20 hover:border-zinc-800 transition-all cursor-pointer flex flex-col justify-between"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-zinc-900 border border-zinc-800 rounded-lg">
-                  <Github className="w-4 h-4 text-white" />
-                </div>
-                <h3 className="text-sm font-bold text-white group-hover:text-indigo-400 transition-colors">
-                  Open Source Codebase
-                </h3>
-              </div>
-              <span className="text-[8px] font-mono uppercase px-2 py-0.5 rounded border bg-emerald-500/5 border-emerald-500/10 text-emerald-400">
-                Active
-              </span>
-            </div>
-            <p className="text-[12px] text-zinc-500 leading-relaxed font-medium pr-4">
-              Explore my public repositories, track live development logs, and view complete implementation histories for all scripting utilities and backend tools.
-            </p>
+        {/* LEFT COLUMN: DENSE EXTERNAL PORTALS (4 Columns) */}
+        <div className="md:col-span-4 space-y-4">
+          <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-600 mb-2 px-1">
+            // External_Profiles
           </div>
-          <div className="flex items-center gap-1 text-[9px] font-mono uppercase tracking-wider text-zinc-600 group-hover:text-zinc-400 transition-colors mt-8">
-            <span>View My GitHub</span>
-            <ArrowUpRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </div>
-        </a>
-
-        {/* CARD 2: PORTFOLIO PORTAL (Compact Block - 5 Columns Wide) */}
-        <a 
-          href="#" 
-          className="group md:col-span-5 md:row-span-2 p-6 rounded-2xl border border-zinc-900 bg-zinc-950/20 hover:border-zinc-800 transition-all cursor-pointer flex flex-col justify-between"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-zinc-900 border border-zinc-800 rounded-lg">
-                  <User className="w-4 h-4 text-white" />
-                </div>
-                <h3 className="text-sm font-bold text-white group-hover:text-indigo-400 transition-colors">
-                  Portfolio
-                </h3>
-              </div>
-              <span className="text-[8px] font-mono uppercase px-2 py-0.5 rounded border bg-indigo-500/5 border-indigo-500/10 text-indigo-400">
-                Online
-              </span>
-            </div>
-            <p className="text-[12px] text-zinc-500 leading-relaxed font-medium">
-              Dive straight into core system designs, architecture writeups, and technical proficiencies.
-            </p>
-          </div>
-          <div className="flex items-center gap-1 text-[9px] font-mono uppercase tracking-wider text-zinc-600 group-hover:text-zinc-400 transition-colors mt-8">
-            <span>Explore Portfolio</span>
-            <ArrowUpRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </div>
-        </a>
-
-        {/* CARD 3: GET STARTED ZONE (Balanced Split - 6 Columns Wide) */}
-        <div className="md:col-span-6 p-6 rounded-2xl border border-dashed border-zinc-800 bg-zinc-950/10 flex flex-col justify-between">
-          <div className="space-y-2">
-            <h4 className="text-xs font-black uppercase font-mono tracking-wider text-white flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse" />
-              Deployment Initialization
-            </h4>
-            <p className="text-[11px] text-zinc-500 leading-relaxed">
-              Ready to link your workspace parameters? Spin up your clean local space core, pipe in your active context pipelines, and clear your browser clutter.
-            </p>
-          </div>
-          <button className="mt-6 flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-white hover:bg-zinc-200 text-black text-[11px] font-mono font-black uppercase tracking-wider transition-all active:scale-[0.98]">
-            <Play className="w-3.5 h-3.5 fill-current" />
-            Launch Environment
-          </button>
-        </div>
-
-        {/* CARD 4: SUPPORT ZONE (Balanced Split - 6 Columns Wide) */}
-        <div className="md:col-span-6 p-6 rounded-2xl border border-dashed border-zinc-800 bg-zinc-950/10 flex flex-col justify-between">
-          <div className="space-y-2">
-            <h4 className="text-xs font-black uppercase font-mono tracking-wider text-white flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-amber-500 rounded-full" />
-              Sustain the Architecture
-            </h4>
-            <p className="text-[11px] text-zinc-500 leading-relaxed">
-              This sandbox runs with zero tracking layers or data hoarding. Consider backing active infrastructure runtimes to keep server operations clean.
-            </p>
-          </div>
+          
+          {/* GITHUB PORTAL */}
           <a 
-            href="https://buymeacoffee.com" 
+            href="https://github.com" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="mt-6 flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-zinc-950 hover:bg-zinc-900 text-zinc-400 hover:text-white text-[11px] font-mono font-bold uppercase tracking-wider transition-all border border-zinc-800 hover:border-zinc-700 active:scale-[0.98]"
+            className="group flex items-center justify-between p-4 rounded-xl border border-zinc-900 bg-zinc-950/40 hover:border-zinc-800 transition-all cursor-pointer"
           >
-            <Coffee className="w-3.5 h-3.5 text-amber-500" />
-            Buy Me A Coffee // Support Build
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-zinc-900 border border-zinc-800 rounded-lg group-hover:border-indigo-500/30 transition-colors">
+                <Github className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
+              </div>
+              <div className="space-y-0.5">
+                <h3 className="text-xs font-bold text-white">GitHub</h3>
+                <span className="text-[9px] font-mono text-zinc-600 group-hover:text-zinc-400 transition-colors">Source repositories</span>
+              </div>
+            </div>
+            <ArrowUpRight className="w-3 h-3 text-zinc-600 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
           </a>
+
+          {/* PORTFOLIO PORTAL */}
+          <a 
+            href="#" 
+            className="group flex items-center justify-between p-4 rounded-xl border border-zinc-900 bg-zinc-950/40 hover:border-zinc-800 transition-all cursor-pointer"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-zinc-900 border border-zinc-800 rounded-lg group-hover:border-indigo-500/30 transition-colors">
+                <User className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
+              </div>
+              <div className="space-y-0.5">
+                <h3 className="text-xs font-bold text-white">Portfolio</h3>
+                <span className="text-[9px] font-mono text-zinc-600 group-hover:text-zinc-400 transition-colors">System blueprints</span>
+              </div>
+            </div>
+            <ArrowUpRight className="w-3 h-3 text-zinc-600 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+          </a>
+        </div>
+
+        {/* RIGHT COLUMN: ACTION STACK WITh SCROLL INTENSITY (8 Columns) */}
+        <div className="md:col-span-8 space-y-8">
+          
+          {/* DEPLOYMENT PANEL SECTION */}
+          <div className="p-8 rounded-2xl border border-zinc-900 bg-zinc-950/20 space-y-6 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4 font-mono text-[9px] text-zinc-800 tracking-widest hidden sm:block">
+              SYS_INIT_01
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-indigo-400">
+                <Terminal className="w-3.5 h-3.5" />
+                <span>Initialization Protocol</span>
+              </div>
+              <h3 className="text-lg font-black tracking-tight text-white uppercase">
+                Launch Workspace App Environment
+              </h3>
+              <p className="text-[12px] text-zinc-400 leading-relaxed font-medium">
+                Ready to clean up the workspace clutter? Link your internal system parameters, open a dedicated staging pipeline, and view your synchronized logs right where they belong without manual browser interaction.
+              </p>
+            </div>
+            <button className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white hover:bg-zinc-200 text-black text-[11px] font-mono font-black uppercase tracking-wider transition-all active:scale-[0.98]">
+              <Play className="w-3.5 h-3.5 fill-current" />
+              Initialize Live Core
+            </button>
+          </div>
+
+          {/* BACKING / SUSTAIN CODE SECTION */}
+          <div className="p-8 rounded-2xl border border-dashed border-zinc-900 bg-zinc-950/10 space-y-6 relative overflow-hidden">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-amber-500">
+                <Cpu className="w-3.5 h-3.5" />
+                <span>Runtime Infrastructure Support</span>
+              </div>
+              <h3 className="text-lg font-black tracking-tight text-white uppercase">
+                Sustain the Platform Architecture
+              </h3>
+              <p className="text-[12px] text-zinc-500 leading-relaxed font-medium">
+                This platform routes queries and assets with zero tracking cookies, data retention vaults, or promotional tracking layers. Contributions directly offset server runtime hosting, database pipelines, and continuous update loops.
+              </p>
+            </div>
+            <a 
+              href="https://buymeacoffee.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 rounded-xl bg-zinc-950 hover:bg-zinc-900 text-zinc-400 hover:text-white text-[11px] font-mono font-bold uppercase tracking-wider transition-all border border-zinc-800 hover:border-zinc-700 active:scale-[0.98]"
+            >
+              <Coffee className="w-3.5 h-3.5 text-amber-500" />
+              Buy Me A Coffee // Back Staging Costs
+            </a>
+          </div>
+
         </div>
 
       </div>
