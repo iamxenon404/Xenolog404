@@ -45,7 +45,7 @@ export default function Dashboard() {
 
       <div className="relative z-10 max-w-[700px] mx-auto px-6 py-12">
         
-        {/* PREMIUM NAV BAR WITH AUTH MANAGEMENT */}
+        {/* PREMIUM NAV BAR */}
         <nav className="flex items-center justify-between mb-20">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-zinc-900 dark:bg-white shadow-2xl transition-transform hover:rotate-12">
@@ -57,40 +57,14 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center gap-3">
-            {status === "loading" ? (
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-500/10 border border-zinc-500/20 text-[10px] font-black uppercase tracking-wider">
-                <Loader2 className="w-3 h-3 animate-spin text-zinc-500" />
-              </div>
-            ) : session ? (
-              /* SECURE USER METADATA HUD */
-              <div className="flex items-center gap-3 bg-zinc-200/60 dark:bg-zinc-900/40 border border-zinc-300/50 dark:border-white/5 pl-2 pr-3 py-1 rounded-full text-[10px] font-black tracking-wider shadow-sm transition-all hover:border-zinc-400 dark:hover:border-white/10 group/user">
-                <img 
-                  src={session.user?.image || ""} 
-                  alt="GitHub Avatar" 
-                  className="w-6 h-6 rounded-full border border-zinc-300 dark:border-white/20 shadow-sm"
-                />
-                <div className="flex flex-col text-left">
-                  <span className="text-zinc-900 dark:text-white uppercase tracking-tight text-[9px] truncate max-w-[80px]">{session.user?.name}</span>
-                  <span className="text-[8px] font-mono font-bold text-indigo-500 tracking-normal">UID: {(session.user as any).githubId || 'PRO'}</span>
-                </div>
-                <button 
-                  onClick={() => signOut()}
-                  title="Disconnect Node"
-                  className="ml-1 p-1 rounded-full text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 dark:hover:bg-rose-500/20 transition-all active:scale-95"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            ) : (
-              /* OAUTH HANDSHAKE CONNECT BUTTON */
-              <button
-                onClick={() => signIn('github')}
-                className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-950 dark:bg-white border border-zinc-800 dark:border-zinc-200 text-[10px] font-black uppercase tracking-widest text-white dark:text-black hover:scale-[1.03] active:scale-[0.97] transition-all shadow-md group/btn"
-              >
-                <Github className="w-3.5 h-3.5 group-hover/btn:rotate-12 transition-transform" />
-                Connect Node
-              </button>
-            )}
+            {/* UPDATED: ALWAYS SHOW CONNECT BUTTON WITH POPUP POPPING UP */}
+            <button
+              onClick={() => alert('GitHub Connect is coming soon!')}
+              className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-950 dark:bg-white border border-zinc-800 dark:border-zinc-200 text-[10px] font-black uppercase tracking-widest text-white dark:text-black hover:scale-[1.03] active:scale-[0.97] transition-all shadow-md group/btn"
+            >
+              <Github className="w-3.5 h-3.5 group-hover/btn:rotate-12 transition-transform" />
+              Connect Node
+            </button>
 
             {/* STATUS MONITOR CHIP */}
             <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">
@@ -118,14 +92,12 @@ export default function Dashboard() {
               <section className="space-y-10">
                 
                 {/* ACCOUNT PERSISTENCE ALERT FLAG */}
-                {!session && status !== "loading" && (
-                  <div className="flex items-center justify-between gap-4 bg-amber-500/5 border border-amber-500/10 p-3.5 rounded-xl text-amber-600 dark:text-amber-400 text-[9px] font-bold uppercase tracking-widest leading-normal">
-                    <div className="flex items-center gap-2.5">
-                      <ShieldAlert className="w-4 h-4 shrink-0 opacity-80" />
-                      <span>Guest Mode active. Endpoints auto-purge after 24 hours of total inactivity.</span>
-                    </div>
+                <div className="flex items-center justify-between gap-4 bg-amber-500/5 border border-amber-500/10 p-3.5 rounded-xl text-amber-600 dark:text-amber-400 text-[9px] font-bold uppercase tracking-widest leading-normal">
+                  <div className="flex items-center gap-2.5">
+                    <ShieldAlert className="w-4 h-4 shrink-0 opacity-80" />
+                    <span>Guest Mode active. Endpoints auto-purge after 24 hours of total inactivity.</span>
                   </div>
-                )}
+                </div>
 
                 <button
                   onClick={handleCreate}
@@ -136,7 +108,7 @@ export default function Dashboard() {
                   <div className="flex items-center gap-3 relative z-10">
                     {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Plus className="w-5 h-5" />}
                     <span className="tracking-widest uppercase text-xs font-black">
-                      {loading ? 'Spawning Node...' : session ? 'Deploy Permanent Link' : 'Deploy Temporary Link'}
+                      {loading ? 'Spawning Node...' : 'Deploy Temporary Link'}
                     </span>
                   </div>
                   <ArrowUpRight className="w-5 h-5 opacity-50 group-hover:opacity-100 transition-opacity relative z-10" />
@@ -150,34 +122,31 @@ export default function Dashboard() {
                 )}
 
                 {/* ACTIVE LINKS WRAPPER */}
-{/* ACTIVE LINKS WRAPPER */}
-<div className="space-y-6">
-  {/* FIXED LAYOUT WRAPPER: Stacks vertically on mobile, row-flows on small screens up */}
-  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
-    <h2 className="text-[10px] font-black text-zinc-400 dark:text-zinc-700 uppercase tracking-[0.4em]">
-      Active_Network_Nodes
-    </h2>
-    {/* self-start prevents the badge from stretching full width when stacked vertically */}
-    <span className="self-start sm:self-auto text-[10px] bg-zinc-100 dark:bg-white/5 px-2 py-0.5 rounded border border-zinc-200 dark:border-white/10 text-zinc-500 font-mono">
-      {endpoints.length} CHANNELS
-    </span>
-  </div>
+                <div className="space-y-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
+                    <h2 className="text-[10px] font-black text-zinc-400 dark:text-zinc-700 uppercase tracking-[0.4em]">
+                      Active_Network_Nodes
+                    </h2>
+                    <span className="self-start sm:self-auto text-[10px] bg-zinc-100 dark:bg-white/5 px-2 py-0.5 rounded border border-zinc-200 dark:border-white/10 text-zinc-500 font-mono">
+                      {endpoints.length} CHANNELS
+                    </span>
+                  </div>
 
-  {endpoints.length > 0 ? (
-    <div className="grid gap-4">
-      {endpoints.map((ep) => (
-        <EndpointCard key={ep.id} id={ep.id} url={ep.url} />
-      ))}
-    </div>
-  ) : (
-    !loading && (
-      <div className="py-24 flex flex-col items-center justify-center border border-dashed border-zinc-200 dark:border-zinc-900 rounded-3xl bg-zinc-50/50 dark:bg-white/[0.01] group/empty">
-        <Webhook className="w-10 h-10 text-zinc-300 dark:text-zinc-800 mb-4 group-hover/empty:scale-110 transition-transform" />
-        <p className="text-[10px] font-black text-zinc-400 dark:text-zinc-800 uppercase tracking-[0.2em]">Awaiting Uplink Deployment</p>
-      </div>
-    )
-  )}
-</div>
+                  {endpoints.length > 0 ? (
+                    <div className="grid gap-4">
+                      {endpoints.map((ep) => (
+                        <EndpointCard key={ep.id} id={ep.id} url={ep.url} />
+                      ))}
+                    </div>
+                  ) : (
+                    !loading && (
+                      <div className="py-24 flex flex-col items-center justify-center border border-dashed border-zinc-200 dark:border-zinc-900 rounded-3xl bg-zinc-50/50 dark:bg-white/[0.01] group/empty">
+                        <Webhook className="w-10 h-10 text-zinc-300 dark:text-zinc-800 mb-4 group-hover/empty:scale-110 transition-transform" />
+                        <p className="text-[10px] font-black text-zinc-400 dark:text-zinc-800 uppercase tracking-[0.2em]">Awaiting Uplink Deployment</p>
+                      </div>
+                    )
+                  )}
+                </div>
               </section>
             </div>
           </div>

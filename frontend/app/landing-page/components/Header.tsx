@@ -56,28 +56,14 @@ export default function Header() {
 
         {/* RIGHT: AUTH ACTIONS (COMMENTED OUT FOR EXCLUSIVE GUEST MODE) */}
         <div className="shrink-0">
-          {/* {session ? (
-            <div className="flex items-center gap-3">
-              <span className="text-xs text-zinc-600 dark:text-zinc-400 font-mono truncate max-w-[100px] sm:max-w-none">
-                {session.user?.name}
-              </span>
-              <button 
-                onClick={() => signOut()}
-                className="p-2 rounded-lg bg-zinc-200 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 hover:text-rose-500 transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => signIn('github')}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-black text-xs font-black uppercase tracking-widest transition-all hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98]"
-            >
-              <Github className="w-3.5 h-3.5" />
-              Connect
-            </button>
-          )} 
-          */}
+         {/* RE-ACTIVATED HEADER PORTAL WITH "COMING SOON" POPUP */}
+<button
+  onClick={() => alert('GitHub Connect is coming soon!')}
+  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-black text-xs font-black uppercase tracking-widest transition-all hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98] shadow-sm"
+>
+  <Github className="w-3.5 h-3.5" />
+  Connect
+</button>
         </div>
       </header>
     </div>
