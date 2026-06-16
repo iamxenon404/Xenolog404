@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import Features from './components/Features';
 import Footer from './components/Footer';
+import Projects from './components/Projects';
 
 export default function LandingPage() {
   const handleGuestEntry = () => {
@@ -21,6 +22,7 @@ export default function LandingPage() {
       <main className="flex-1 flex flex-col justify-center">
         <Hero onEnterGuest={handleGuestEntry} />
         <Features />
+        <Projects />
       </main>
 
       <Footer />
