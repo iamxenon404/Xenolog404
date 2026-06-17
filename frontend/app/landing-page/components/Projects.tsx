@@ -1,8 +1,12 @@
 'use client';
 
-import { ArrowUpRight, FolderGit2, Github, Coffee, Play, User, Terminal, Cpu } from 'lucide-react';
+import { ArrowUpRight, FolderGit2, Github, Play, User, Terminal } from 'lucide-react';
 
-export default function Projects() {
+interface ProjectsProps {
+  onEnterGuest: () => void;
+}
+
+export default function Projects({ onEnterGuest }: ProjectsProps) {
   return (
     <section className="w-full max-w-[850px] mx-auto px-8 py-24 border-t border-zinc-200 dark:border-zinc-900/60 mt-12 text-left transition-colors duration-700">
       
@@ -43,6 +47,8 @@ export default function Projects() {
           {/* PORTFOLIO PORTAL */}
           <a 
             href="https://xenon404.vercel.app" 
+            target="_blank"
+            rel="noopener noreferrer"
             className="group flex items-center justify-between p-4 rounded-xl border border-zinc-200 dark:border-zinc-900 bg-white dark:bg-zinc-950/40 hover:border-zinc-300 dark:hover:border-zinc-800 transition-all cursor-pointer shadow-sm dark:shadow-none"
           >
             <div className="flex items-center gap-3">
@@ -58,8 +64,8 @@ export default function Projects() {
           </a>
         </div>
 
-        {/* RIGHT COLUMN: ACTION STACK WITH SCROLL INTENSITY (8 Columns) */}
-        <div className="md:col-span-8 space-y-8">
+        {/* RIGHT COLUMN: ACTION STACK (8 Columns) */}
+        <div className="md:col-span-8">
           
           {/* DEPLOYMENT PANEL SECTION */}
           <div className="p-8 rounded-2xl border border-zinc-200 dark:border-zinc-900 bg-white dark:bg-zinc-950/20 space-y-6 relative overflow-hidden group shadow-sm dark:shadow-none">
@@ -78,35 +84,13 @@ export default function Projects() {
                 Ready to stop guessing what your third-party APIs are sending? Generate a unique, transient HTTP intercept URL instantly. Pipe in your inbound JSON payloads, stream headers over zero-latency web sockets, and inspect nested structures in real time.
               </p>
             </div>
-            <button className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 rounded-xl bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-[11px] font-mono font-black uppercase tracking-wider transition-all active:scale-[0.98] shadow-md">
+            <button 
+              onClick={onEnterGuest}
+              className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 rounded-xl bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-[11px] font-mono font-black uppercase tracking-wider transition-all active:scale-[0.98] shadow-md"
+            >
               <Play className="w-3.5 h-3.5 fill-current" />
               Initialize Ingestion Session
             </button>
-          </div>
-
-          {/* BACKING / SUSTAIN CODE SECTION */}
-          <div className="p-8 rounded-2xl border border-dashed border-zinc-300 dark:border-zinc-900 bg-zinc-200/20 dark:bg-zinc-950/10 space-y-6 relative overflow-hidden">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-amber-600 dark:text-amber-500">
-                <Cpu className="w-3.5 h-3.5" />
-                <span>Server Compute Infrastructure Support</span>
-              </div>
-              <h3 className="text-lg font-black tracking-tight text-zinc-900 dark:text-white uppercase font-mono">
-                Sustain Webhook Pipeline Operations
-              </h3>
-              <p className="text-[12px] text-zinc-500 dark:text-zinc-500 leading-relaxed font-medium">
-                XenLog processes continuous network packets with absolute privacy. We do not place target cookies, read your custom internal data structures, or drop tracker layers. Contributions directly cover persistent server proxy costs, streaming data pipelines, and maintenance loops.
-              </p>
-            </div>
-            <a 
-              href="https://buymeacoffee.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white dark:bg-zinc-950 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white text-[11px] font-mono font-bold uppercase tracking-wider transition-all border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 active:scale-[0.98] shadow-sm dark:shadow-none"
-            >
-              <Coffee className="w-3.5 h-3.5 text-amber-500" />
-              Buy Me A Coffee // Back Network Costs
-            </a>
           </div>
 
         </div>
