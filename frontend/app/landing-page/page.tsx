@@ -27,7 +27,7 @@ export default function LandingPage({ onEnterGuest }: LandingPageProps) {
         {/* 3. Pass the prop down directly to the Hero component */}
         <Hero onEnterGuest={onEnterGuest} />
         <Features />
-        <Projects />
+        <Projects onEnterGuest={onEnterGuest} />
         <WorkFlowMatrix />
       </main>
 

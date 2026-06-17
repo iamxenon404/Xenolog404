@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
-import { Webhook, Github, LogOut, Star, ArrowUpRight } from 'lucide-react';
+import { Webhook, Github, LogOut, Star, ArrowUpRight, Loader2 } from 'lucide-react';
 
 export default function Header() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [stars, setStars] = useState<number | null>(null);
 
   const REPO_URL = "https://github.com/iamxenon404/Xenolog404";
@@ -54,16 +54,41 @@ export default function Header() {
           </a>
         </div>
 
-        {/* RIGHT: AUTH ACTIONS (COMMENTED OUT FOR EXCLUSIVE GUEST MODE) */}
+        {/* RIGHT: LIVE AUTH ACTIONS */}
         <div className="shrink-0">
-         {/* RE-ACTIVATED HEADER PORTAL WITH "COMING SOON" POPUP */}
-<button
-  onClick={() => alert('GitHub Connect is coming soon!')}
-  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-black text-xs font-black uppercase tracking-widest transition-all hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98] shadow-sm"
->
-  <Github className="w-3.5 h-3.5" />
-  Connect
-</button>
+          {status === "loading" ? (
+            <div className="flex items-center justify-center p-2 rounded-xl bg-zinc-500/10 border border-zinc-500/20">
+              <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
+            </div>
+          ) : session ? (
+            /* ACTIVE SESSION HUD CHIP */
+            <div className="flex items-center gap-2 bg-zinc-200/60 dark:bg-zinc-900/40 border border-zinc-300/50 dark:border-white/5 pl-1.5 pr-2 py-1 rounded-xl text-[10px] font-black tracking-wider shadow-sm transition-all hover:border-zinc-400 dark:hover:border-white/10 group/user">
+              <img 
+                src={session.user?.image || ""} 
+                alt="Avatar" 
+                className="w-5 h-5 rounded-lg border border-zinc-300 dark:border-white/20 shadow-sm"
+              />
+              <span className="hidden md:inline text-zinc-900 dark:text-white uppercase tracking-tight text-[9px] truncate max-w-[60px]">
+                {session.user?.name?.split(' ')[0]}
+              </span>
+              <button 
+                onClick={() => signOut()}
+                title="Disconnect"
+                className="p-1 rounded-md text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 dark:hover:bg-rose-500/20 transition-all active:scale-95"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            /* ACTIVE SIGN IN HANDSHAKE */
+            <button
+              onClick={() => signIn('github')}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-950 dark:bg-white text-white dark:text-black text-xs font-black uppercase tracking-widest transition-all hover:bg-zinc-800 dark:hover:bg-zinc-200 active:scale-[0.98] shadow-sm group/btn"
+            >
+              <Github className="w-3.5 h-3.5 group-hover/btn:rotate-12 transition-transform" />
+              Connect
+            </button>
+          )}
         </div>
       </header>
     </div>

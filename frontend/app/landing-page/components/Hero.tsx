@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ArrowRight, Github, Terminal, Cpu, ShieldAlert, Activity } from 'lucide-react';
+import { ArrowRight, Github, Terminal, Cpu, ShieldAlert, Activity, Loader2 } from 'lucide-react';
 import { signIn, useSession } from 'next-auth/react';
 
 interface HeroProps {
@@ -9,7 +9,7 @@ interface HeroProps {
 }
 
 export default function Hero({ onEnterGuest }: HeroProps) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [mountedTime, setMountedTime] = useState<string>('');
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function Hero({ onEnterGuest }: HeroProps) {
               An elite, privacy-first webhook inspector. Stream raw HTTP incoming payloads over the live internet with no cookies, zero third-party tracking, and automatic 24-hour memory purges.
             </p>
 
-            {/* INTERACTION ACTION BUTTONS (FIXED - NO DUPLICATION) */}
+            {/* INTERACTION ACTION BUTTONS */}
             <div className="flex flex-col sm:flex-row gap-3 w-full justify-start relative z-20">
               <button
                 onClick={onEnterGuest}
@@ -59,13 +59,30 @@ export default function Hero({ onEnterGuest }: HeroProps) {
                 <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
               </button>
 
-              <button
-                onClick={() => alert('GitHub Sync is coming soon!')}
-                className="flex items-center justify-center gap-2 px-5 py-3 rounded bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 text-[11px] font-mono font-black uppercase tracking-wider transition-all border border-zinc-300 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 active:scale-[0.98]"
-              >
-                <Github className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
-                Sync GitHub
-              </button>
+              {status === "loading" ? (
+                <div className="flex items-center justify-center gap-2 px-5 py-3 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-400 text-[11px] font-mono font-black border border-zinc-300 dark:border-zinc-800 w-full sm:w-auto min-w-[140px]">
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Checking Node...
+                </div>
+              ) : session ? (
+                /* SESSION DETECTED: AUTO DOCK TO ROUTER WORKSPACE */
+                <button
+                  onClick={onEnterGuest}
+                  className="flex items-center justify-center gap-2 px-5 py-3 rounded bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-mono font-black uppercase tracking-wider transition-all active:scale-[0.98] shadow-md group/dashboard"
+                >
+                  Go to Dashboard
+                  <ArrowRight className="w-3.5 h-3.5 stroke-[2.5] group-hover/dashboard:translate-x-0.5 transition-transform" />
+                </button>
+              ) : (
+                /* ANONYMOUS: TRIGGER INSTANT OAUTH HANDSHAKE */
+                <button
+                  onClick={() => signIn('github')}
+                  className="flex items-center justify-center gap-2 px-5 py-3 rounded bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 text-[11px] font-mono font-black uppercase tracking-wider transition-all border border-zinc-300 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 active:scale-[0.98]"
+                >
+                  <Github className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
+                  Sync GitHub
+                </button>
+              )}
             </div>
           </div>
         </div>

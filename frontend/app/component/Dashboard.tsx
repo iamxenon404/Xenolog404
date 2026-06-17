@@ -57,14 +57,41 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* UPDATED: ALWAYS SHOW CONNECT BUTTON WITH POPUP POPPING UP */}
-            <button
-              onClick={() => alert('GitHub Connect is coming soon!')}
-              className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-950 dark:bg-white border border-zinc-800 dark:border-zinc-200 text-[10px] font-black uppercase tracking-widest text-white dark:text-black hover:scale-[1.03] active:scale-[0.97] transition-all shadow-md group/btn"
-            >
-              <Github className="w-3.5 h-3.5 group-hover/btn:rotate-12 transition-transform" />
-              Connect Node
-            </button>
+            {/* DYNAMIC AUTH CONSOLE SWITCH */}
+            {status === "loading" ? (
+              <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-500/10 border border-zinc-500/20 text-[10px] font-black uppercase tracking-wider">
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-500" />
+              </div>
+            ) : session ? (
+              /* SECURE USER METADATA HUD */
+              <div className="flex items-center gap-3 bg-zinc-200/60 dark:bg-zinc-900/40 border border-zinc-300/50 dark:border-white/5 pl-2 pr-3 py-1 rounded-full text-[10px] font-black tracking-wider shadow-sm transition-all hover:border-zinc-400 dark:hover:white/10 group/user">
+                <img 
+                  src={session.user?.image || ""} 
+                  alt="GitHub Avatar" 
+                  className="w-6 h-6 rounded-full border border-zinc-300 dark:border-white/20 shadow-sm"
+                />
+                <div className="flex flex-col text-left">
+                  <span className="text-zinc-900 dark:text-white uppercase tracking-tight text-[9px] truncate max-w-[80px]">{session.user?.name}</span>
+                  <span className="text-[8px] font-mono font-bold text-indigo-500 tracking-normal">UID: {(session.user as any).githubId || 'PRO'}</span>
+                </div>
+                <button 
+                  onClick={() => signOut()}
+                  title="Disconnect Node"
+                  className="ml-1 p-1 rounded-full text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 dark:hover:bg-rose-500/20 transition-all active:scale-95"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              /* OAUTH HANDSHAKE CONNECT BUTTON */
+              <button
+                onClick={() => signIn('github')}
+                className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-950 dark:bg-white border border-zinc-800 dark:border-zinc-200 text-[10px] font-black uppercase tracking-widest text-white dark:text-black hover:scale-[1.03] active:scale-[0.97] transition-all shadow-md group/btn"
+              >
+                <Github className="w-3.5 h-3.5 group-hover/btn:rotate-12 transition-transform" />
+                Connect Node
+              </button>
+            )}
 
             {/* STATUS MONITOR CHIP */}
             <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">
@@ -91,13 +118,15 @@ export default function Dashboard() {
             <div className="bg-white dark:bg-[#050505] rounded-[26px] p-8 border border-zinc-100 dark:border-white/5">
               <section className="space-y-10">
                 
-                {/* ACCOUNT PERSISTENCE ALERT FLAG */}
-                <div className="flex items-center justify-between gap-4 bg-amber-500/5 border border-amber-500/10 p-3.5 rounded-xl text-amber-600 dark:text-amber-400 text-[9px] font-bold uppercase tracking-widest leading-normal">
-                  <div className="flex items-center gap-2.5">
-                    <ShieldAlert className="w-4 h-4 shrink-0 opacity-80" />
-                    <span>Guest Mode active. Endpoints auto-purge after 24 hours of total inactivity.</span>
+                {/* ACCOUNT PERSISTENCE ALERT FLAG - Only shows when unauthenticated */}
+                {!session && status !== "loading" && (
+                  <div className="flex items-center justify-between gap-4 bg-amber-500/5 border border-amber-500/10 p-3.5 rounded-xl text-amber-600 dark:text-amber-400 text-[9px] font-bold uppercase tracking-widest leading-normal">
+                    <div className="flex items-center gap-2.5">
+                      <ShieldAlert className="w-4 h-4 shrink-0 opacity-80" />
+                      <span>Guest Mode active. Endpoints auto-purge after 24 hours of total inactivity.</span>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <button
                   onClick={handleCreate}
@@ -108,7 +137,7 @@ export default function Dashboard() {
                   <div className="flex items-center gap-3 relative z-10">
                     {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Plus className="w-5 h-5" />}
                     <span className="tracking-widest uppercase text-xs font-black">
-                      {loading ? 'Spawning Node...' : 'Deploy Temporary Link'}
+                      {loading ? 'Spawning Node...' : session ? 'Deploy Permanent Link' : 'Deploy Temporary Link'}
                     </span>
                   </div>
                   <ArrowUpRight className="w-5 h-5 opacity-50 group-hover:opacity-100 transition-opacity relative z-10" />
