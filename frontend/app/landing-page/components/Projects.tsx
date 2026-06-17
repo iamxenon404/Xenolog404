@@ -1,12 +1,15 @@
 'use client';
 
-import { ArrowUpRight, FolderGit2, Github, Play, User, Terminal } from 'lucide-react';
+import { ArrowUpRight, FolderGit2, Github, Play, User, Terminal, ArrowRight, Loader2 } from 'lucide-react';
+import { signIn, useSession } from 'next-auth/react';
 
 interface ProjectsProps {
   onEnterGuest: () => void;
 }
 
 export default function Projects({ onEnterGuest }: ProjectsProps) {
+  const { data: session, status } = useSession();
+
   return (
     <section className="w-full max-w-[850px] mx-auto px-8 py-24 border-t border-zinc-200 dark:border-zinc-900/60 mt-12 text-left transition-colors duration-700">
       
@@ -64,7 +67,7 @@ export default function Projects({ onEnterGuest }: ProjectsProps) {
           </a>
         </div>
 
-        {/* RIGHT COLUMN: ACTION STACK (8 Columns) */}
+        {/* RIGHT COLUMN: ACTION STACK WITH TWO BUTTONS */}
         <div className="md:col-span-8">
           
           {/* DEPLOYMENT PANEL SECTION */}
@@ -84,19 +87,49 @@ export default function Projects({ onEnterGuest }: ProjectsProps) {
                 Ready to stop guessing what your third-party APIs are sending? Generate a unique, transient HTTP intercept URL instantly. Pipe in your inbound JSON payloads, stream headers over zero-latency web sockets, and inspect nested structures in real time.
               </p>
             </div>
-            <button 
-              onClick={onEnterGuest}
-              className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 rounded-xl bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-[11px] font-mono font-black uppercase tracking-wider transition-all active:scale-[0.98] shadow-md"
-            >
-              <Play className="w-3.5 h-3.5 fill-current" />
-              Initialize Ingestion Session
-            </button>
+
+            {/* DUAL ACTION BUTTON SYSTEM */}
+            <div className="flex flex-col sm:flex-row gap-3 w-full justify-start relative z-20">
+              
+              {/* PRIMARY WORKSPACE LINK */}
+              <button 
+                onClick={onEnterGuest}
+                className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-[11px] font-mono font-black uppercase tracking-wider transition-all active:scale-[0.98] shadow-md"
+              >
+                <Play className="w-3.5 h-3.5 fill-current" />
+                {session ? 'Open Dashboard Console' : 'Open Guest HUD'}
+              </button>
+
+              {/* SECONDARY AUTH SWITCH */}
+              {status === "loading" ? (
+                <div className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-zinc-100 dark:bg-zinc-900 text-zinc-400 text-[11px] font-mono font-black border border-zinc-200 dark:border-zinc-800/80 min-w-[140px]">
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Checking System Node...
+                </div>
+              ) : session ? (
+                /* ALREADY IN: BACKUP ROUTE TO DASHBOARD */
+                <button
+                  onClick={onEnterGuest}
+                  className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-mono font-black uppercase tracking-wider transition-all active:scale-[0.98] shadow-md group/proj-dash"
+                >
+                  Go to Dashboard
+                  <ArrowRight className="w-3.5 h-3.5 stroke-[2.5] group-hover/proj-dash:translate-x-0.5 transition-transform" />
+                </button>
+              ) : (
+                /* OFFLINE: RUN LOGIN FLOW */
+                <button
+                  onClick={() => signIn('github')}
+                  className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 text-[11px] font-mono font-black uppercase tracking-wider transition-all border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 active:scale-[0.98]"
+                >
+                  <Github className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
+                  Sync GitHub
+                </button>
+              )}
+            </div>
+
           </div>
-
         </div>
-
       </div>
-
     </section>
   );
 }
