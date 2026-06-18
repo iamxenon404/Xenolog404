@@ -1,3 +1,5 @@
+import { pool } from './db';
+
 export interface RequestLog {
   method: string;
   headers: Record<string, string | string[]>;
@@ -7,22 +9,43 @@ export interface RequestLog {
   ip: string;
 }
 
-// In-memory store: id -> list of captured requests
-const store: Record<string, RequestLog[]> = {};
-
-export function createEndpoint(id: string): void {
-  store[id] = [];
+// Check if a dynamic URL exists in our database configuration
+export async function endpointExists(id: string): boolean {
+  const query = 'SELECT 1 FROM webhook_nodes WHERE hardware_id = $1 LIMIT 1;';
+  const result = await pool.query(query, [id]);
+  return result.rowCount > 0;
 }
 
-export function endpointExists(id: string): boolean {
-  return id in store;
+// Log a fresh incoming webhook intercept directly to Postgres
+export async function appendLog(id: string, log: RequestLog): Promise<void> {
+  const query = `
+    INSERT INTO webhook_logs (hardware_id, method, headers, body, query, ip, timestamp)
+    VALUES ($1, $2, $3, $4, $5, $6, $7);
+  `;
+  await pool.query(query, [
+    id,
+    log.method,
+    JSON.stringify(log.headers),
+    JSON.stringify(log.body),
+    JSON.stringify(log.query),
+    log.ip,
+    log.timestamp
+  ]);
 }
 
-export function appendLog(id: string, log: RequestLog): void {
-  store[id].push(log);
-}
+// Get history logs ordered with the latest captures at the top
+export async function getLogs(id: string): Promise<RequestLog[] | null> {
+  // First make sure the endpoint node is structurally valid
+  const exists = await endpointExists(id);
+  if (!exists) return null;
 
-export function getLogs(id: string): RequestLog[] | null {
-  if (!endpointExists(id)) return null;
-  return store[id];
+  const query = `
+    SELECT method, headers, body, query, ip, timestamp 
+    FROM webhook_logs 
+    WHERE hardware_id = $1 
+    ORDER BY timestamp DESC;
+  `;
+  const result = await pool.query(query, [id]);
+  
+  return result.rows as RequestLog[];
 }
