@@ -5,7 +5,6 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import { Plus, Webhook, AlertCircle, Loader2, Cpu, Globe, ArrowUpRight, Github, LogOut, ShieldAlert } from 'lucide-react';
 import EndpointCard from './EndpointCard';
 import Sidebar from './Sidebar';
-// import Sidebar from './Sidebar'; 
 
 interface Endpoint {
   id: string;
@@ -21,10 +20,9 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Extract custom githubId or default user identifier from your oauth token hook wrapper
   const userUID = session ? ((session.user as any).githubId || 'PRO_USER') : null;
 
-  // FETCH STORED ENDPOINTS FROM POSTGRES UPON AUTH HANDSHAKE
+  // FETCH PERSISTENT CHANNELS FROM THE CORRECT ROOT ROUTE MAPPING
   useEffect(() => {
     if (!userUID) {
       setEndpoints([]);
@@ -34,7 +32,8 @@ export default function Dashboard() {
 
     async function loadPersistentNodes() {
       try {
-        const res = await fetch(`${BACKEND_URL}/api/logs/user/${userUID}`);
+        // FIXED: Hit the root endpoint layout directly matching app.use('/', logsRouter)
+        const res = await fetch(`${BACKEND_URL}/user/${userUID}`);
         const data = await res.json();
         
         if (data.success && data.nodes) {
@@ -59,10 +58,11 @@ export default function Dashboard() {
     setLoading(true);
     setError(null);
     try {
+      // FIXED: Points cleanly to app.use('/create', createRouter) 
       const res = await fetch(`${BACKEND_URL}/create`, { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: userUID || 'guest_session' }) // Anchor target user payload
+        body: JSON.stringify({ userId: userUID || 'guest_session' })
       });
       const data = await res.json();
       
@@ -80,7 +80,7 @@ export default function Dashboard() {
   return (
     <div className="flex min-h-screen bg-zinc-100 dark:bg-[#000000] transition-colors duration-700 font-sans overflow-hidden">
       
-      {/* 1. SIDEBAR MATRIX INTEGRATION */}
+      {/* 1. SIDEBAR CLUSTER PANELS */}
       {session && (
         <Sidebar 
           endpoints={endpoints} 
@@ -89,7 +89,7 @@ export default function Dashboard() {
         />
       )}
 
-      {/* MAIN CONTAINER STREAM */}
+      {/* MAIN VIEWPORT WINDOW */}
       <main className="flex-1 relative z-10 overflow-y-auto selection:bg-indigo-500/30 text-zinc-900 dark:text-zinc-400">
         
         {/* ELITE BACKGROUND UI */}
@@ -102,7 +102,7 @@ export default function Dashboard() {
 
         <div className="relative z-10 max-w-[700px] mx-auto px-6 py-12">
           
-          {/* PREMIUM NAV BAR */}
+          {/* NAV HUB */}
           <nav className="flex items-center justify-between mb-20">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-xl bg-zinc-900 dark:bg-white shadow-2xl transition-transform hover:rotate-12">
@@ -154,7 +154,7 @@ export default function Dashboard() {
             </div>
           </nav>
 
-          {/* WORKSPACE HEADLINE */}
+          {/* HEADLINE PANEL */}
           <header className="flex flex-col items-center mb-16 text-center">
             <h1 className="text-7xl font-black tracking-tighter text-zinc-900 dark:text-white mb-6 bg-gradient-to-b from-zinc-900 to-zinc-600 dark:from-white dark:to-zinc-500 bg-clip-text text-transparent">
               Inspector
@@ -164,7 +164,7 @@ export default function Dashboard() {
             </p>
           </header>
 
-          {/* PRIMARY FUNCTIONAL HUD CARD */}
+          {/* HUD MATRIX WRAPPER */}
           <div className="relative group">
             <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[32px] blur opacity-10 group-hover:opacity-20 transition duration-1000"></div>
             <div className="relative bg-zinc-200/50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-white/10 rounded-[32px] p-2 backdrop-blur-3xl shadow-2xl">
@@ -202,7 +202,7 @@ export default function Dashboard() {
                     </div>
                   )}
 
-                  {/* ACTIVE LINKS / CONTEXT LOG VIEWER HUD */}
+                  {/* ACTIVE HUD CHANNEL DISPLAY */}
                   <div className="space-y-6">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
                       <h2 className="text-[10px] font-black text-zinc-400 dark:text-zinc-700 uppercase tracking-[0.4em]">
@@ -217,12 +217,10 @@ export default function Dashboard() {
 
                     {activeEndpoint ? (
                       <div className="grid gap-4">
-                        {/* Render focusing targeted entity card entry */}
                         <EndpointCard id={activeEndpoint.id} url={activeEndpoint.url} />
                         
-                        {/* REAL-TIME LOG VIEWER HOOK SPLIT */}
                         <div className="mt-4 pt-4 border-t border-zinc-100 dark:border-white/5">
-                          {/* <LogViewer id={activeEndpoint.id} /> */}
+                          {/* Ready to embed separate <LogViewer id={activeEndpoint.id} /> here */}
                         </div>
                       </div>
                     ) : (
@@ -239,7 +237,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* BOTTOM METRICS */}
+          {/* METRICS */}
           <footer className="mt-16 grid grid-cols-2 gap-4">
             {[
               { label: 'Throughput', value: '24ms / Global', icon: Cpu, color: 'text-indigo-500' },
