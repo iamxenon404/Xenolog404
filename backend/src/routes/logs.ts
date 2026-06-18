@@ -4,20 +4,7 @@ import { pool } from '../utils/db';
 
 const router = Router();
 
-// 1. Existing route: Fetch data logs for a specific node box
-router.get('/:id', (req: Request, res: Response) => {
-  const id = req.params.id as string;
-  const logs = getLogs(id);
-
-  if (logs === null) {
-    res.status(404).json({ error: `No webhook endpoint found for id: ${id}` });
-    return;
-  }
-
-  res.status(200).json({ id, logs });
-});
-
-// 2. New route: Recover all historical hardware IDs belonging to a user
+// 1. Move specific user path to the TOP so Express evaluates it first
 router.get('/user/:userId', async (req: Request, res: Response) => {
   const { userId } = req.params;
 
@@ -35,6 +22,19 @@ router.get('/user/:userId', async (req: Request, res: Response) => {
     console.error('Database recovery error:', err);
     res.status(500).json({ error: 'Failed to recover saved nodes for this user' });
   }
+});
+
+// 2. Wildcard catch-all parameter goes to the BOTTOM
+router.get('/:id', (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const logs = getLogs(id);
+
+  if (logs === null) {
+    res.status(404).json({ error: `No webhook endpoint found for id: ${id}` });
+    return;
+  }
+
+  res.status(200).json({ id, logs });
 });
 
 export default router;
