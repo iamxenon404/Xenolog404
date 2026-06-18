@@ -10,12 +10,14 @@ export interface RequestLog {
 }
 
 // Check if a dynamic URL exists in our database configuration
-export async function endpointExists(id: string): boolean {
+
+export async function endpointExists(id: string): Promise<boolean> {
   const query = 'SELECT 1 FROM webhook_nodes WHERE hardware_id = $1 LIMIT 1;';
   const result = await pool.query(query, [id]);
-  return result.rowCount > 0;
+  
+  // Using ?? 0 provides a fallback if rowCount is null, clearing the error
+  return (result.rowCount ?? 0) > 0;
 }
-
 // Log a fresh incoming webhook intercept directly to Postgres
 export async function appendLog(id: string, log: RequestLog): Promise<void> {
   const query = `
