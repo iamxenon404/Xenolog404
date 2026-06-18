@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { Plus, Webhook, AlertCircle, Loader2, Cpu, Globe, ArrowUpRight, Github, LogOut, ShieldAlert } from 'lucide-react';
 import EndpointCard from './EndpointCard';
-import Sidebar from './Sidebar'; // Importing the new side nav navigation panel
+import Sidebar from './Sidebar';
+// import Sidebar from './Sidebar'; 
 
 interface Endpoint {
   id: string;
