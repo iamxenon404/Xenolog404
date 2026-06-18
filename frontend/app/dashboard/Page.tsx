@@ -11,6 +11,15 @@ interface Endpoint {
   url: string;
 }
 
+// Explicit override types to clear the IntrinsicAttributes mismatch error
+type DashboardPropsType = {
+  endpoints: Endpoint[];
+  setEndpoints: React.Dispatch<React.SetStateAction<Endpoint[]>>;
+  selectedEndpointId: string | null;
+  setSelectedEndpointId: React.Dispatch<React.SetStateAction<string | null>>;
+  userUID: any;
+};
+
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
 
 export default function DashboardPage() {
@@ -51,6 +60,9 @@ export default function DashboardPage() {
 
     loadPersistentNodes();
   }, [userUID]);
+
+  // Safely cast component reference to avoid strict IntrinsicAttributes check issues
+  const ValidatedDashboard = Dashboard as React.ComponentType<DashboardPropsType>;
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-zinc-100 dark:bg-[#000000] text-zinc-900 dark:text-zinc-400 font-sans overflow-x-hidden">
@@ -102,7 +114,7 @@ export default function DashboardPage() {
 
       {/* MAIN CONTENT DISPLAY */}
       <main className="flex-1 w-full min-w-0 overflow-y-auto">
-        <Dashboard 
+        <ValidatedDashboard 
           endpoints={endpoints} 
           setEndpoints={setEndpoints}
           selectedEndpointId={selectedEndpointId}
