@@ -11,7 +11,6 @@ interface Endpoint {
   url: string;
 }
 
-// Explicit override types to clear the IntrinsicAttributes mismatch error
 type DashboardPropsType = {
   endpoints: Endpoint[];
   setEndpoints: React.Dispatch<React.SetStateAction<Endpoint[]>>;
@@ -43,11 +42,19 @@ export default function DashboardPage() {
         const res = await fetch(`${BACKEND_URL}/user/${userUID}`);
         const data = await res.json();
         
+        // 🔍 DEBUG LOG: Open your browser's inspector (F12 -> Console) to see what your DB actually returns!
+        console.log("XEN_DATABASE_PAYLOAD:", data);
+        
         if (data.success && data.nodes) {
-          const formattedEndpoints = data.nodes.map((node: any) => ({
-            id: node.hardware_id,
-            url: `${BACKEND_URL}/hook/${node.hardware_id}`
-          }));
+          const formattedEndpoints = data.nodes.map((node: any) => {
+            // Safety fallback check for different naming conventions from SQL/MongoDB fields
+            const hardwareId = node.hardware_id || node.id || node._id;
+            return {
+              id: String(hardwareId),
+              url: `${BACKEND_URL}/hook/${hardwareId}`
+            };
+          });
+
           setEndpoints(formattedEndpoints);
           if (formattedEndpoints.length > 0) {
             setSelectedEndpointId(formattedEndpoints[0].id);
@@ -61,7 +68,6 @@ export default function DashboardPage() {
     loadPersistentNodes();
   }, [userUID]);
 
-  // Safely cast component reference to avoid strict IntrinsicAttributes check issues
   const ValidatedDashboard = Dashboard as React.ComponentType<DashboardPropsType>;
 
   return (
@@ -98,7 +104,7 @@ export default function DashboardPage() {
             selectedId={selectedEndpointId} 
             onSelect={(id) => {
               setSelectedEndpointId(id);
-              setMobileMenuOpen(false); // Auto close menu on pick
+              setMobileMenuOpen(false);
             }} 
           />
         </aside>
