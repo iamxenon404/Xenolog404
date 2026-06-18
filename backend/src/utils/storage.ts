@@ -9,6 +9,7 @@ export interface RequestLog {
   ip: string;
 }
 
+
 // Check if a dynamic URL exists in our database configuration
 
 export async function endpointExists(id: string): Promise<boolean> {
