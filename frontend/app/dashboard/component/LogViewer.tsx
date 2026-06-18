@@ -70,7 +70,7 @@ export default function LogViewer({ id }: LogViewerProps) {
         
         <nav className="flex items-center justify-between mb-16">
           <Link 
-            href="/" 
+            href="/dashboard" 
             className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400 dark:text-zinc-600 hover:text-indigo-500 transition-all"
           >
             <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />

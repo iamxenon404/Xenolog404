@@ -34,8 +34,9 @@ export default function LogEntry({ method, headers, body, query, timestamp, ip }
   const [payloadStyle, setPayloadStyle] = useState<'pretty' | 'minified'>('pretty');
 
   const style = methodStyles[method] ?? { bg: 'bg-zinc-500/10', text: 'text-zinc-500', border: 'border-zinc-500/20' };
-  const time = new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-
+  // 🍏 Explicitly parse it as a number so JavaScript handles it perfectly
+const cleanTimestamp = typeof timestamp === 'string' ? Number(timestamp) : timestamp;
+const time = new Date(cleanTimestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
   return (
     <div className={`group transition-all duration-300 border rounded-2xl overflow-hidden ${
       expanded 
