@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { Plus, Webhook, AlertCircle, Loader2, Cpu, Globe, ArrowUpRight, Github, LogOut, ShieldAlert } from 'lucide-react';
 import EndpointCard from './EndpointCard';
-import Sidebar from './Sidebar';
 
 interface Endpoint {
   id: string;
@@ -32,7 +31,6 @@ export default function Dashboard() {
 
     async function loadPersistentNodes() {
       try {
-        // FIXED: Hit the root endpoint layout directly matching app.use('/', logsRouter)
         const res = await fetch(`${BACKEND_URL}/user/${userUID}`);
         const data = await res.json();
         
@@ -58,7 +56,6 @@ export default function Dashboard() {
     setLoading(true);
     setError(null);
     try {
-      // FIXED: Points cleanly to app.use('/create', createRouter) 
       const res = await fetch(`${BACKEND_URL}/create`, { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -80,15 +77,6 @@ export default function Dashboard() {
   return (
     <div className="flex min-h-screen bg-zinc-100 dark:bg-[#000000] transition-colors duration-700 font-sans overflow-hidden">
       
-      {/* 1. SIDEBAR CLUSTER PANELS */}
-      {session && (
-        <Sidebar 
-          endpoints={endpoints} 
-          selectedId={selectedEndpointId} 
-          onSelect={setSelectedEndpointId} 
-        />
-      )}
-
       {/* MAIN VIEWPORT WINDOW */}
       <main className="flex-1 relative z-10 overflow-y-auto selection:bg-indigo-500/30 text-zinc-900 dark:text-zinc-400">
         
