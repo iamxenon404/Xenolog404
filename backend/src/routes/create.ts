@@ -14,7 +14,23 @@ router.post('/', async (req: Request, res: Response) => {
   }
 
   try {
-    // Persist the custom endpoint generation to Postgres
+    // 🍏 1. Check if the user has already hit their 5-link guest limit (counting active links from the last 24h)
+    const countQuery = `
+      SELECT COUNT(*) FROM webhook_nodes 
+      WHERE user_id = $1 
+      AND created_at >= NOW() - INTERVAL '24 hours';
+    `;
+    const countResult = await pool.query(countQuery, [userId]);
+    const linkCount = parseInt(countResult.rows[0].count, 10);
+
+    if (linkCount >= 5) {
+      res.status(403).json({ 
+        error: 'Link limit reached. Guest mode allows a maximum of 5 active links per 24 hours.' 
+      });
+      return;
+    }
+
+    // 2. Persist the custom endpoint generation to Postgres if under limit
     const query = `
       INSERT INTO webhook_nodes (user_id, hardware_id)
       VALUES ($1, $2)
