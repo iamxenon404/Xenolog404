@@ -10,7 +10,10 @@ const app: Application = express();
 // CORS
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')
-  : ['http://localhost:3000'];
+  : [
+    'http://localhost:3000',
+    'https://xenlog404.vercel.app'
+  ];
 
 app.use(cors({
   origin: allowedOrigins,
