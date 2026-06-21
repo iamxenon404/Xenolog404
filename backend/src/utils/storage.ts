@@ -25,15 +25,16 @@ export async function appendLog(id: string, log: RequestLog): Promise<void> {
     INSERT INTO webhook_logs (hardware_id, method, headers, body, query, ip, timestamp)
     VALUES ($1, $2, $3, $4, $5, $6, $7);
   `;
-  await pool.query(query, [
-    id,
-    log.method,
-    JSON.stringify(log.headers),
-    JSON.stringify(log.body),
-    JSON.stringify(log.query),
-    log.ip,
-    log.timestamp
-  ]);
+// Inside your appendLog function in storage.ts
+await pool.query(query, [
+  id,
+  log.method,
+  JSON.stringify(log.headers),
+  JSON.stringify(log.body),
+  JSON.stringify(log.query),
+  log.ip,
+  new Date(log.timestamp) // 🍏 Converts the number token into a SQL-friendly Date object
+]);
 }
 
 // Get history logs ordered with the latest captures at the top
