@@ -22,36 +22,40 @@ export default function Dashboard() {
   const userUID = session ? ((session.user as any).githubId || 'PRO_USER') : null;
 
   // FETCH PERSISTENT CHANNELS FROM THE CORRECT ROOT ROUTE MAPPING
-  useEffect(() => {
-    if (!userUID) {
-      setEndpoints([]);
-      setSelectedEndpointId(null);
-      return;
-    }
+useEffect(() => {
+  // 🍏 Strict guard to block phantom null executions
+  if (!userUID || userUID === 'null') {
+    setEndpoints([]);
+    setSelectedEndpointId(null);
+    return;
+  }
 
-    async function loadPersistentNodes() {
-      try {
-        const res = await fetch(`${BACKEND_URL}/user/${userUID}`);
-        const data = await res.json();
-        
-        if (data.success && data.nodes) {
-          const formattedEndpoints = data.nodes.map((node: any) => ({
-            id: node.hardware_id,
-            url: `${BACKEND_URL}/hook/${node.hardware_id}`
-          }));
-          setEndpoints(formattedEndpoints);
-          if (formattedEndpoints.length > 0) {
-            setSelectedEndpointId(formattedEndpoints[0].id);
-          }
+  async function loadPersistentNodes() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/user/${userUID}`);
+      
+      // Safety step if server returns an error code status
+      if (!res.ok) throw new Error(`HTTP network error: status ${res.status}`);
+      
+      const data = await res.json();
+      
+      if (data.success && data.nodes) {
+        const formattedEndpoints = data.nodes.map((node: any) => ({
+          id: node.hardware_id,
+          url: `${BACKEND_URL}/hook/${node.hardware_id}`
+        }));
+        setEndpoints(formattedEndpoints);
+        if (formattedEndpoints.length > 0) {
+          setSelectedEndpointId(formattedEndpoints[0].id);
         }
-      } catch (err) {
-        console.error('XEN_FETCH_ERROR: Could not fetch active account nodes.', err);
       }
+    } catch (err) {
+      console.error('XEN_FETCH_ERROR: Could not fetch active account nodes.', err);
     }
+  }
 
-    loadPersistentNodes();
-  }, [userUID]);
-
+  loadPersistentNodes();
+}, [userUID]);
   const handleCreate = async () => {
     setLoading(true);
     setError(null);
