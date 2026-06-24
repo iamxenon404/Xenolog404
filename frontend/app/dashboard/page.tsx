@@ -27,22 +27,19 @@ export default function DashboardPage() {
   const [selectedEndpointId, setSelectedEndpointId] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Fallback to 'guest_session' or handle local state accordingly if logged out
-  const userUID = session ? ((session.user as any).githubId || 'PRO_USER') : null;
+  // 🍏 Default to 'guest_session' when not logged in to safely manage guest-mode tracking
+  const userUID = session ? ((session.user as any).githubId || 'PRO_USER') : 'guest_session';
 
   // Sync state loader
   useEffect(() => {
-    // If no user session, skip remote backend persistent query
-    if (!userUID || userUID === 'null') {
-      setEndpoints([]);
-      setSelectedEndpointId(null);
+    // 🍏 Only fetch historical context from the DB if a real authenticated user is online
+    if (!session || userUID === 'guest_session') {
       return;
     }
 
     async function loadPersistentNodes() {
       try {
         const res = await fetch(`${BACKEND_URL}/user/${userUID}`);
-        if (!res.ok) throw new Error(`HTTP status: ${res.status}`);
         const data = await res.json();
         
         console.log("XEN_DATABASE_PAYLOAD:", data);
@@ -67,7 +64,7 @@ export default function DashboardPage() {
     }
 
     loadPersistentNodes();
-  }, [userUID]);
+  }, [userUID, session]);
 
   const ValidatedDashboard = Dashboard as React.ComponentType<DashboardPropsType>;
 
@@ -107,7 +104,7 @@ export default function DashboardPage() {
             endpoints={endpoints} 
             selectedId={selectedEndpointId} 
             onSelect={(id) => {
-              setSelectedEndpointId(id); // 🍏 Updates selected state inside layout orchestrator
+              setSelectedEndpointId(id); // Updates selection state in layout orchestrator
               setMobileMenuOpen(false);
             }} 
           />
