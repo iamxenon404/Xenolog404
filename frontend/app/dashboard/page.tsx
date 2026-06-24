@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { Menu, X, Layers } from 'lucide-react';
+import { Menu, X, Layers, ShieldAlert, ArrowLeft } from 'lucide-react';
 import Dashboard from "./component/Dashboard";
 import Sidebar from "./component/Sidebar";
 
 interface Endpoint {
   id: string;
   url: string;
-  createdAt?: number; // Track when it was made
+  createdAt?: number;
 }
 
 type DashboardPropsType = {
@@ -27,6 +27,9 @@ export default function DashboardPage() {
   const [endpoints, setEndpoints] = useState<Endpoint[]>([]);
   const [selectedEndpointId, setSelectedEndpointId] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // 🍏 State lifted up to handle the screen-centered overlay
+  const [promptDeleteId, setPromptDeleteId] = useState<string | null>(null);
 
   const userUID = session ? ((session.user as any).githubId || 'PRO_USER') : 'guest_session';
 
@@ -40,13 +43,11 @@ export default function DashboardPage() {
           const now = Date.now();
           const oneDayInMs = 24 * 60 * 60 * 1000;
 
-          // Filter out links older than 24 hours
           const activeGuests = parsed.filter(ep => {
-            if (!ep.createdAt) return true; // fallback for older entries
+            if (!ep.createdAt) return true;
             return now - ep.createdAt < oneDayInMs;
           });
 
-          // Save the cleaned list back if things expired
           if (activeGuests.length !== parsed.length) {
             localStorage.setItem('xen_guest_endpoints', JSON.stringify(activeGuests));
           }
@@ -96,7 +97,6 @@ export default function DashboardPage() {
   // 3. Backup State Changes: Save guest links to local storage whenever a new one is added
   useEffect(() => {
     if (userUID === 'guest_session' && endpoints.length > 0) {
-      // Stamp endpoints with creation time if missing
       const stamped = endpoints.map(ep => ({
         ...ep,
         createdAt: ep.createdAt || Date.now()
@@ -107,13 +107,90 @@ export default function DashboardPage() {
     }
   }, [endpoints, userUID]);
 
+  // 🍏 Unified deletion logic triggered from within the modal
+  const handleConfirmDelete = async () => {
+    if (!promptDeleteId) return;
+    const idToDelete = promptDeleteId;
+    setPromptDeleteId(null); // Clear prompt view state
+
+    if (!userUID || userUID === 'guest_session') {
+      const activeGuests = endpoints.filter(ep => ep.id !== idToDelete);
+      setEndpoints(activeGuests);
+      localStorage.setItem('xen_guest_endpoints', JSON.stringify(activeGuests));
+      if (selectedEndpointId === idToDelete) {
+        setSelectedEndpointId(activeGuests[0]?.id || null);
+      }
+      return;
+    }
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/delete/${idToDelete}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: userUID })
+      });
+
+      if (res.ok) {
+        const remaining = endpoints.filter(ep => ep.id !== idToDelete);
+        setEndpoints(remaining);
+        if (selectedEndpointId === idToDelete) {
+          setSelectedEndpointId(remaining[0]?.id || null);
+        }
+      } else {
+        alert("Failed to drop node segment execution layer.");
+      }
+    } catch (err) {
+      console.error("Deletion communication pipeline dropped:", err);
+    }
+  };
+
   const ValidatedDashboard = Dashboard as React.ComponentType<DashboardPropsType>;
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-zinc-100 dark:bg-[#000000] text-zinc-900 dark:text-zinc-400 font-sans overflow-x-hidden">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-zinc-100 dark:bg-[#000000] text-zinc-900 dark:text-zinc-400 font-sans overflow-x-hidden relative">
       
-      {/* MOBILE HEADER - Always rendered now */}
-      <div className="lg:hidden flex items-center justify-between px-6 py-4 bg-white dark:bg-[#050505] border-b border-zinc-200 dark:border-white/5 relative z-50">
+      {/* 🍏 HIGH-TECH GLOBAL SCREEN MODAL OVERLAY */}
+      {promptDeleteId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#000000]/70 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="w-full max-w-md p-6 bg-white dark:bg-[#050505] border border-zinc-200 dark:border-white/10 rounded-[32px] shadow-2xl space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500">
+                <ShieldAlert className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-xs font-black tracking-widest text-zinc-900 dark:text-white uppercase italic">
+                  CRITICAL_OVERRIDE
+                </h3>
+                <p className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 mt-0.5">
+                  Action: Purge_Node_Sequence
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 font-mono uppercase tracking-wide leading-relaxed bg-zinc-50 dark:bg-white/[0.02] p-4 rounded-2xl border border-zinc-200/50 dark:border-white/5">
+              Are you sure you want to drop link sequence <span className="text-indigo-500 font-bold">{promptDeleteId}</span>? This completely wipes out all logged streams permanently.
+            </p>
+
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => setPromptDeleteId(null)}
+                className="py-3.5 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-400 transition-all flex items-center justify-center gap-2 border border-transparent dark:border-white/5"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Abort_Action
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                className="py-3.5 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/20 transition-all active:scale-95"
+              >
+                Confirm_Purge
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MOBILE HEADER */}
+      <div className="lg:hidden flex items-center justify-between px-6 py-4 bg-white dark:bg-[#050505] border-b border-zinc-200 dark:border-white/5 relative z-30">
         <div className="flex items-center gap-2">
           <Layers className="w-4 h-4 text-indigo-500" />
           <span className="text-xs font-black uppercase tracking-widest text-zinc-900 dark:text-white">
@@ -129,15 +206,17 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      {/* SIDEBAR VIEWPORT - Condition removed so it renders immediately */}
+      {/* SIDEBAR VIEWPORT */}
       <aside className={`
         fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-[#030303] lg:bg-transparent
         transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0
         ${mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
       `}>
+        {/* 🍏 Pass down setPromptDeleteId function to sidebar prop space */}
         <Sidebar 
           endpoints={endpoints} 
           selectedId={selectedEndpointId} 
+          setPromptDeleteId={setPromptDeleteId}
           onSelect={(id) => {
             setSelectedEndpointId(id);
             setMobileMenuOpen(false);
@@ -148,7 +227,7 @@ export default function DashboardPage() {
       {/* MOBILE DIMMER OVERLAY */}
       {mobileMenuOpen && (
         <div 
-          className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-20 bg-black/50 backdrop-blur-sm lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}

@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { Terminal, Radio, LayoutGrid, Trash2, Loader2, ShieldAlert, ArrowLeft } from 'lucide-react';
+import { Terminal, Radio, LayoutGrid, Trash2 } from 'lucide-react';
 
 interface Endpoint {
   id: string;
@@ -12,81 +11,12 @@ interface SidebarProps {
   endpoints: Endpoint[];
   selectedId: string | null;
   onSelect: (id: string) => void;
-  setEndpoints: React.Dispatch<React.SetStateAction<Endpoint[]>>;
-  userUID: string | null;
+  setPromptDeleteId: (id: string | null) => void; // 🍏 Add this prop definition
 }
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
-
-export default function Sidebar({ endpoints, selectedId, onSelect, setEndpoints, userUID }: SidebarProps) {
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [promptDeleteId, setPromptDeleteId] = useState<string | null>(null);
-
-  const executePurge = async (id: string) => {
-    setPromptDeleteId(null);
-    
-    if (!userUID || userUID === 'guest_session') {
-      const activeGuests = endpoints.filter(ep => ep.id !== id);
-      setEndpoints(activeGuests);
-      localStorage.setItem('xen_guest_endpoints', JSON.stringify(activeGuests));
-      return;
-    }
-
-    setDeletingId(id);
-    try {
-      const res = await fetch(`${BACKEND_URL}/delete/${id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: userUID })
-      });
-
-      if (res.ok) {
-        setEndpoints((prev) => prev.filter(ep => ep.id !== id));
-      }
-    } catch (err) {
-      console.error("Deletion communication pipeline dropped:", err);
-    } finally {
-      setDeletingId(null);
-    }
-  };
-
+export default function Sidebar({ endpoints, selectedId, onSelect, setPromptDeleteId }: SidebarProps) {
   return (
-    <aside className="w-64 shrink-0 h-screen bg-zinc-50 dark:bg-[#030303] border-r border-zinc-200 dark:border-white/5 flex flex-col z-20 relative overflow-hidden">
-      
-      {/* CUSTOM OVERLAY POP-UP PROMPT */}
-      {promptDeleteId && (
-        <div className="absolute inset-0 z-30 bg-white dark:bg-[#030303] flex flex-col justify-between p-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-          <div className="space-y-6 mt-4">
-            <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-500">
-              <ShieldAlert className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-xs font-black tracking-widest text-zinc-900 dark:text-white uppercase italic">
-                CRITICAL_OVERRIDE
-              </h3>
-              <p className="text-[10px] text-zinc-400 font-mono mt-2 leading-relaxed uppercase tracking-wider">
-                Terminate segment link <span className="text-indigo-500">{promptDeleteId.slice(0, 8)}</span>? This action purges all captured logs across database clusters.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-2 mb-4">
-            <button
-              onClick={() => executePurge(promptDeleteId)}
-              className="w-full py-3 bg-rose-600 hover:bg-rose-500 text-white font-black text-[10px] uppercase tracking-[0.2em] rounded-xl transition-all shadow-lg shadow-rose-600/10 active:scale-95"
-            >
-              CONFIRM_PURGE
-            </button>
-            <button
-              onClick={() => setPromptDeleteId(null)}
-              className="w-full py-3 bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/10 text-zinc-500 dark:text-zinc-400 font-black text-[10px] uppercase tracking-[0.2em] rounded-xl transition-all flex items-center justify-center gap-2"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" /> ABORT_ACTION
-            </button>
-          </div>
-        </div>
-      )}
-
+    <aside className="w-64 shrink-0 h-screen bg-zinc-50 dark:bg-[#030303] border-r border-zinc-200 dark:border-white/5 flex flex-col z-20 relative">
       <div className="p-6 border-b border-zinc-200 dark:border-white/5 flex items-center gap-2">
         <LayoutGrid className="w-4 h-4 text-indigo-500" />
         <h2 className="text-[10px] font-black tracking-[0.3em] text-zinc-400 dark:text-zinc-500 uppercase">
@@ -102,7 +32,6 @@ export default function Sidebar({ endpoints, selectedId, onSelect, setEndpoints,
         ) : (
           endpoints.map((ep) => {
             const isActive = ep.id === selectedId;
-            const isDeleting = deletingId === ep.id;
 
             return (
               <div
@@ -131,23 +60,19 @@ export default function Sidebar({ endpoints, selectedId, onSelect, setEndpoints,
                 </div>
                 
                 <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                  {isActive && !isDeleting && (
-                    <Radio className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
+                  {isActive && (
+                    <Radio className="w-3.5 h-3.5 text-indigo-500 animate-pulse group-hover:hidden" />
                   )}
 
                   <button
-                    disabled={isDeleting}
                     onClick={(e) => {
-                      e.stopPropagation();
-                      setPromptDeleteId(ep.id);
+                      e.stopPropagation(); // Stop row click selection
+                      setPromptDeleteId(ep.id); // 🍏 Pass ID up to parent dashboard
                     }}
                     className="p-1.5 rounded-lg opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 dark:hover:bg-rose-500/20 transition-all"
+                    title="Purge Node Layout"
                   >
-                    {isDeleting ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-400" />
-                    ) : (
-                      <Trash2 className="w-3.5 h-3.5" />
-                    )}
+                    <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
