@@ -4,8 +4,9 @@ import { useEffect, useState, useCallback } from 'react';
 import { ArrowLeft, Activity, Terminal, Copy, Check, Zap, Wifi } from 'lucide-react';
 import LogEntry from './LogEntry';
 import Link from 'next/link';
+import { env } from '@/app/config/env';
 // 🍏 Import the centralized environment configuration structure
-import { env } from '@/config/env';
+// import { env } from '@/config/env';
 
 interface Log {
   method: string;
