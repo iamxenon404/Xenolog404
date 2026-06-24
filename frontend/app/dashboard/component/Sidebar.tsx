@@ -11,10 +11,15 @@ interface SidebarProps {
   endpoints: Endpoint[];
   selectedId: string | null;
   onSelect: (id: string) => void;
-  setPromptDeleteId: (id: string | null) => void; // 🍏 Add this prop definition
+  setPromptDeleteId: (id: string | null) => void;
 }
 
-export default function Sidebar({ endpoints, selectedId, onSelect, setPromptDeleteId }: SidebarProps) {
+export default function Sidebar({ 
+  endpoints, 
+  selectedId, 
+  onSelect, 
+  setPromptDeleteId 
+}: SidebarProps) {
   return (
     <aside className="w-64 shrink-0 h-screen bg-zinc-50 dark:bg-[#030303] border-r border-zinc-200 dark:border-white/5 flex flex-col z-20 relative">
       <div className="p-6 border-b border-zinc-200 dark:border-white/5 flex items-center gap-2">
@@ -66,8 +71,8 @@ export default function Sidebar({ endpoints, selectedId, onSelect, setPromptDele
 
                   <button
                     onClick={(e) => {
-                      e.stopPropagation(); // Stop row click selection
-                      setPromptDeleteId(ep.id); // 🍏 Pass ID up to parent dashboard
+                      e.stopPropagation(); // Stops parent line item choice trigger from flashing
+                      setPromptDeleteId(ep.id); // dispatches payload segment target up contextually
                     }}
                     className="p-1.5 rounded-lg opacity-0 group-hover:opacity-100 text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 dark:hover:bg-rose-500/20 transition-all"
                     title="Purge Node Layout"
