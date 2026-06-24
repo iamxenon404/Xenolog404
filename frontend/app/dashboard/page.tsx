@@ -27,11 +27,13 @@ export default function DashboardPage() {
   const [selectedEndpointId, setSelectedEndpointId] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Fallback to 'guest_session' or handle local state accordingly if logged out
   const userUID = session ? ((session.user as any).githubId || 'PRO_USER') : null;
 
   // Sync state loader
   useEffect(() => {
-    if (!userUID) {
+    // If no user session, skip remote backend persistent query
+    if (!userUID || userUID === 'null') {
       setEndpoints([]);
       setSelectedEndpointId(null);
       return;
@@ -40,14 +42,13 @@ export default function DashboardPage() {
     async function loadPersistentNodes() {
       try {
         const res = await fetch(`${BACKEND_URL}/user/${userUID}`);
+        if (!res.ok) throw new Error(`HTTP status: ${res.status}`);
         const data = await res.json();
         
-        // 🔍 DEBUG LOG: Open your browser's inspector (F12 -> Console) to see what your DB actually returns!
         console.log("XEN_DATABASE_PAYLOAD:", data);
         
         if (data.success && data.nodes) {
           const formattedEndpoints = data.nodes.map((node: any) => {
-            // Safety fallback check for different naming conventions from SQL/MongoDB fields
             const hardwareId = node.hardware_id || node.id || node._id;
             return {
               id: String(hardwareId),
@@ -70,11 +71,14 @@ export default function DashboardPage() {
 
   const ValidatedDashboard = Dashboard as React.ComponentType<DashboardPropsType>;
 
+  // 🍏 Sidebar condition: display anytime nodes are spawned (Auth OR Guest mode)
+  const shouldShowSidebar = endpoints.length > 0;
+
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-zinc-100 dark:bg-[#000000] text-zinc-900 dark:text-zinc-400 font-sans overflow-x-hidden">
       
       {/* MOBILE HEADER */}
-      {session && (
+      {shouldShowSidebar && (
         <div className="lg:hidden flex items-center justify-between px-6 py-4 bg-white dark:bg-[#050505] border-b border-zinc-200 dark:border-white/5 relative z-50">
           <div className="flex items-center gap-2">
             <Layers className="w-4 h-4 text-indigo-500" />
@@ -93,7 +97,7 @@ export default function DashboardPage() {
       )}
 
       {/* SIDEBAR VIEWPORT */}
-      {session && (
+      {shouldShowSidebar && (
         <aside className={`
           fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-[#030303] lg:bg-transparent
           transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0
@@ -103,7 +107,7 @@ export default function DashboardPage() {
             endpoints={endpoints} 
             selectedId={selectedEndpointId} 
             onSelect={(id) => {
-              setSelectedEndpointId(id);
+              setSelectedEndpointId(id); // 🍏 Updates selected state inside layout orchestrator
               setMobileMenuOpen(false);
             }} 
           />

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { Plus, Webhook, AlertCircle, Loader2, Cpu, Globe, ArrowUpRight, Github, LogOut, ShieldAlert } from 'lucide-react';
 import EndpointCard from './EndpointCard';
@@ -10,52 +10,27 @@ interface Endpoint {
   url: string;
 }
 
+interface DashboardProps {
+  endpoints: Endpoint[];
+  setEndpoints: React.Dispatch<React.SetStateAction<Endpoint[]>>;
+  selectedEndpointId: string | null;
+  setSelectedEndpointId: React.Dispatch<React.SetStateAction<string | null>>;
+  userUID: string | null;
+}
+
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
 
-export default function Dashboard() {
+export default function Dashboard({
+  endpoints,
+  setEndpoints,
+  selectedEndpointId,
+  setSelectedEndpointId,
+  userUID
+}: DashboardProps) {
   const { data: session, status } = useSession();
-  const [endpoints, setEndpoints] = useState<Endpoint[]>([]);
-  const [selectedEndpointId, setSelectedEndpointId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const userUID = session ? ((session.user as any).githubId || 'PRO_USER') : null;
-
-  // FETCH PERSISTENT CHANNELS FROM THE CORRECT ROOT ROUTE MAPPING
-useEffect(() => {
-  // 🍏 Strict guard to block phantom null executions
-  if (!userUID || userUID === 'null') {
-    setEndpoints([]);
-    setSelectedEndpointId(null);
-    return;
-  }
-
-  async function loadPersistentNodes() {
-    try {
-      const res = await fetch(`${BACKEND_URL}/user/${userUID}`);
-      
-      // Safety step if server returns an error code status
-      if (!res.ok) throw new Error(`HTTP network error: status ${res.status}`);
-      
-      const data = await res.json();
-      
-      if (data.success && data.nodes) {
-        const formattedEndpoints = data.nodes.map((node: any) => ({
-          id: node.hardware_id,
-          url: `${BACKEND_URL}/hook/${node.hardware_id}`
-        }));
-        setEndpoints(formattedEndpoints);
-        if (formattedEndpoints.length > 0) {
-          setSelectedEndpointId(formattedEndpoints[0].id);
-        }
-      }
-    } catch (err) {
-      console.error('XEN_FETCH_ERROR: Could not fetch active account nodes.', err);
-    }
-  }
-
-  loadPersistentNodes();
-}, [userUID]);
   const handleCreate = async () => {
     setLoading(true);
     setError(null);
@@ -65,10 +40,19 @@ useEffect(() => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: userUID || 'guest_session' })
       });
+      
+      if (!res.ok) throw new Error(`HTTP status: ${res.status}`);
       const data = await res.json();
       
-      setEndpoints((prev) => [data, ...prev]);
-      setSelectedEndpointId(data.id);
+      // Ensure formatting mirrors layout definitions completely
+      const newEndpoint: Endpoint = {
+        id: String(data.id),
+        url: data.url || `${BACKEND_URL}/hook/${data.id}`
+      };
+      
+      // 🍏 Update the structural core states on the parent orchestrator layout
+      setEndpoints((prev) => [newEndpoint, ...prev]);
+      setSelectedEndpointId(newEndpoint.id);
     } catch (err) {
       setError('XEN_LINK_ERROR: API gateway unreachable.');
     } finally {
@@ -76,6 +60,7 @@ useEffect(() => {
     }
   };
 
+  // 🍏 Seamlessly finds the current active item passed down from DashboardPage state
   const activeEndpoint = endpoints.find(ep => ep.id === selectedEndpointId);
 
   return (
@@ -163,7 +148,7 @@ useEffect(() => {
               <div className="bg-white dark:bg-[#050505] rounded-[26px] p-8 border border-zinc-100 dark:border-white/5">
                 <section className="space-y-10">
                   
-                  {!session && status !== "loading" && (
+                  {!session && (
                     <div className="flex items-center justify-between gap-4 bg-amber-500/5 border border-amber-500/10 p-3.5 rounded-xl text-amber-600 dark:text-amber-400 text-[9px] font-bold uppercase tracking-widest leading-normal">
                       <div className="flex items-center gap-2.5">
                         <ShieldAlert className="w-4 h-4 shrink-0 opacity-80" />
@@ -198,13 +183,11 @@ useEffect(() => {
                   <div className="space-y-6">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
                       <h2 className="text-[10px] font-black text-zinc-400 dark:text-zinc-700 uppercase tracking-[0.4em]">
-                        {session ? 'Focused_Network_Node' : 'Active_Network_Nodes'}
+                        Focused_Network_Node
                       </h2>
-                      {session && (
-                        <span className="self-start sm:self-auto text-[10px] bg-zinc-100 dark:bg-white/5 px-2 py-0.5 rounded border border-zinc-200 dark:border-white/10 text-zinc-500 font-mono">
-                          {endpoints.length} CHANNELS AVAIL
-                        </span>
-                      )}
+                      <span className="self-start sm:self-auto text-[10px] bg-zinc-100 dark:bg-white/5 px-2 py-0.5 rounded border border-zinc-200 dark:border-white/10 text-zinc-500 font-mono">
+                        {endpoints.length} CHANNELS AVAIL
+                      </span>
                     </div>
 
                     {activeEndpoint ? (
