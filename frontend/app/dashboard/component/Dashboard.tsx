@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { Plus, Webhook, AlertCircle, Loader2, Cpu, Globe, ArrowUpRight, Github, LogOut, ShieldAlert } from 'lucide-react';
 import EndpointCard from './EndpointCard';
+import { env } from '@/app/config/env';
+// 🍏 Import the production environment wrapper
+// import { env } from '@/config/env';
 
 interface Endpoint {
   id: string;
@@ -17,8 +20,6 @@ interface DashboardProps {
   setSelectedEndpointId: React.Dispatch<React.SetStateAction<string | null>>;
   userUID: string | null;
 }
-
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
 
 export default function Dashboard({
   endpoints,
@@ -35,7 +36,8 @@ export default function Dashboard({
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${BACKEND_URL}/create`, { 
+      // 🍏 Removed BACKEND_URL fallback logic and switched directly to env.backendUrl
+      const res = await fetch(`${env.backendUrl}/create`, { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: userUID || 'guest_session' })
@@ -44,13 +46,11 @@ export default function Dashboard({
       if (!res.ok) throw new Error(`HTTP status: ${res.status}`);
       const data = await res.json();
       
-      // Ensure formatting mirrors layout definitions completely
       const newEndpoint: Endpoint = {
         id: String(data.id),
-        url: data.url || `${BACKEND_URL}/hook/${data.id}`
+        url: data.url || `${env.backendUrl}/hook/${data.id}`
       };
       
-      // 🍏 Update the structural core states on the parent orchestrator layout
       setEndpoints((prev) => [newEndpoint, ...prev]);
       setSelectedEndpointId(newEndpoint.id);
     } catch (err) {
@@ -60,7 +60,6 @@ export default function Dashboard({
     }
   };
 
-  // 🍏 Seamlessly finds the current active item passed down from DashboardPage state
   const activeEndpoint = endpoints.find(ep => ep.id === selectedEndpointId);
 
   return (
