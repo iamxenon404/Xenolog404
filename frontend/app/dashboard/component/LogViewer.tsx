@@ -4,9 +4,6 @@ import { useEffect, useState, useCallback } from 'react';
 import { ArrowLeft, Activity, Terminal, Copy, Check, Zap, Wifi } from 'lucide-react';
 import LogEntry from './LogEntry';
 import Link from 'next/link';
-import { env } from '@/app/config/env';
-// 🍏 Import the centralized environment configuration structure
-// import { env } from '@/config/env';
 
 interface Log {
   method: string;
@@ -21,19 +18,19 @@ interface LogViewerProps {
   id: string;
 }
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL ;
+
 export default function LogViewer({ id }: LogViewerProps) {
   const [logs, setLogs] = useState<Log[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
-  // 🍏 Cleaned up hardcoded fallback to point seamlessly directly to env.backendUrl
-  const hookUrl = `${env.backendUrl}/hook/${id}`;
+  const hookUrl = `${BACKEND_URL}/hook/${id}`;
 
   const fetchLogs = useCallback(async () => {
     try {
-      // 🍏 Standardized network targets across the global pipeline
-      const res = await fetch(`${env.backendUrl}/${id}`);
+      const res = await fetch(`${BACKEND_URL}/${id}`);
       if (!res.ok) throw new Error('Endpoint not found');
       const data = await res.json();
       setLogs(data.logs);
@@ -129,8 +126,8 @@ export default function LogViewer({ id }: LogViewerProps) {
                   onClick={copyUrl}
                   className={`shrink-0 flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all active:scale-95 shadow-xl ${
                     copied 
-                      ? 'bg-emerald-500 text-white shadow-emerald-500/20' 
-                      : 'bg-zinc-900 dark:bg-white text-white dark:text-black hover:opacity-90 shadow-indigo-500/10'
+                    ? 'bg-emerald-500 text-white shadow-emerald-500/20' 
+                    : 'bg-zinc-900 dark:bg-white text-white dark:text-black hover:opacity-90 shadow-indigo-500/10'
                   }`}
                 >
                   {copied ? <Check className="w-4 h-4 stroke-[3]" /> : <Copy className="w-4 h-4 stroke-[3]" />}
@@ -181,4 +178,4 @@ export default function LogViewer({ id }: LogViewerProps) {
       </div>
     </main>
   );
-}
+} 
