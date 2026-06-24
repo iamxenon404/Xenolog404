@@ -5,8 +5,9 @@ import { useSession } from 'next-auth/react';
 import { Menu, X, Layers, ShieldAlert, ArrowLeft } from 'lucide-react';
 import Dashboard from "./component/Dashboard";
 import Sidebar from "./component/Sidebar";
+import { env } from '../config/env';
 // 🍏 Import the centralized environment layer
-import { env } from '@/config/env';
+// import { env } from '@/config/env';
 
 interface Endpoint {
   id: string;
