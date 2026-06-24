@@ -5,6 +5,8 @@ import { useSession } from 'next-auth/react';
 import { Menu, X, Layers, ShieldAlert, ArrowLeft } from 'lucide-react';
 import Dashboard from "./component/Dashboard";
 import Sidebar from "./component/Sidebar";
+// 🍏 Import the centralized environment layer
+import { env } from '@/config/env';
 
 interface Endpoint {
   id: string;
@@ -17,21 +19,17 @@ type DashboardPropsType = {
   setEndpoints: React.Dispatch<React.SetStateAction<Endpoint[]>>;
   selectedEndpointId: string | null;
   setSelectedEndpointId: React.Dispatch<React.SetStateAction<string | null>>;
-  userUID: any;
+  userUID: string | null; // 🍏 Switched from 'any' to specific layout types matching child requirements
 };
-
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
 
 export default function DashboardPage() {
   const { data: session } = useSession();
   const [endpoints, setEndpoints] = useState<Endpoint[]>([]);
   const [selectedEndpointId, setSelectedEndpointId] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  // 🍏 State lifted up to handle the screen-centered overlay
   const [promptDeleteId, setPromptDeleteId] = useState<string | null>(null);
 
-  const userUID = session ? ((session.user as any).githubId || 'PRO_USER') : 'guest_session';
+  const userUID = session ? String((session.user as any).githubId || 'PRO_USER') : 'guest_session';
 
   // 1. Initial Load: Try restoring Guest links from LocalStorage first
   useEffect(() => {
@@ -69,7 +67,8 @@ export default function DashboardPage() {
 
     async function loadPersistentNodes() {
       try {
-        const res = await fetch(`${BACKEND_URL}/user/${userUID}`);
+        // 🍏 Replaced the fallback variable reference directly with env.backendUrl
+        const res = await fetch(`${env.backendUrl}/user/${userUID}`);
         const data = await res.json();
         
         if (data.success && data.nodes) {
@@ -77,7 +76,7 @@ export default function DashboardPage() {
             const hardwareId = node.hardware_id || node.id || node._id;
             return {
               id: String(hardwareId),
-              url: `${BACKEND_URL}/hook/${hardwareId}`
+              url: `${env.backendUrl}/hook/${hardwareId}`
             };
           });
 
@@ -107,11 +106,11 @@ export default function DashboardPage() {
     }
   }, [endpoints, userUID]);
 
-  // 🍏 Unified deletion logic triggered from within the modal
+  // 4. Unified deletion logic triggered from within the modal
   const handleConfirmDelete = async () => {
     if (!promptDeleteId) return;
     const idToDelete = promptDeleteId;
-    setPromptDeleteId(null); // Clear prompt view state
+    setPromptDeleteId(null); 
 
     if (!userUID || userUID === 'guest_session') {
       const activeGuests = endpoints.filter(ep => ep.id !== idToDelete);
@@ -124,7 +123,8 @@ export default function DashboardPage() {
     }
 
     try {
-      const res = await fetch(`${BACKEND_URL}/delete/${idToDelete}`, {
+      // 🍏 Replaced the fallback variable reference directly with env.backendUrl
+      const res = await fetch(`${env.backendUrl}/delete/${idToDelete}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: userUID })
@@ -149,7 +149,7 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-zinc-100 dark:bg-[#000000] text-zinc-900 dark:text-zinc-400 font-sans overflow-x-hidden relative">
       
-      {/* 🍏 HIGH-TECH GLOBAL SCREEN MODAL OVERLAY */}
+      {/* HIGH-TECH GLOBAL SCREEN MODAL OVERLAY */}
       {promptDeleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#000000]/70 backdrop-blur-md animate-in fade-in duration-200">
           <div className="w-full max-w-md p-6 bg-white dark:bg-[#050505] border border-zinc-200 dark:border-white/10 rounded-[32px] shadow-2xl space-y-6">
@@ -212,7 +212,6 @@ export default function DashboardPage() {
         transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0
         ${mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
       `}>
-        {/* 🍏 Pass down setPromptDeleteId function to sidebar prop space */}
         <Sidebar 
           endpoints={endpoints} 
           selectedId={selectedEndpointId} 
